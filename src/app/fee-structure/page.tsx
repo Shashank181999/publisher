@@ -156,32 +156,32 @@ export default function FeeStructurePage() {
             </div>
 
             {/* Payment Instructions */}
-            <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6">
-              <h2 className="text-lg font-semibold text-yellow-800 mb-4 flex items-center gap-2">
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
+              <h2 className="text-lg font-semibold text-blue-800 mb-4 flex items-center gap-2">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 Payment Instructions
               </h2>
-              <ol className="space-y-3 text-sm text-yellow-900">
+              <ol className="space-y-3 text-sm text-blue-900">
                 <li className="flex gap-3">
-                  <span className="w-6 h-6 bg-yellow-200 rounded-full flex items-center justify-center flex-shrink-0 font-semibold text-yellow-800">1</span>
+                  <span className="w-6 h-6 bg-blue-200 rounded-full flex items-center justify-center flex-shrink-0 font-semibold text-blue-800">1</span>
                   <span>Wait for acceptance email from the editorial team</span>
                 </li>
                 <li className="flex gap-3">
-                  <span className="w-6 h-6 bg-yellow-200 rounded-full flex items-center justify-center flex-shrink-0 font-semibold text-yellow-800">2</span>
+                  <span className="w-6 h-6 bg-blue-200 rounded-full flex items-center justify-center flex-shrink-0 font-semibold text-blue-800">2</span>
                   <span>Transfer the fee using any payment method above</span>
                 </li>
                 <li className="flex gap-3">
-                  <span className="w-6 h-6 bg-yellow-200 rounded-full flex items-center justify-center flex-shrink-0 font-semibold text-yellow-800">3</span>
+                  <span className="w-6 h-6 bg-blue-200 rounded-full flex items-center justify-center flex-shrink-0 font-semibold text-blue-800">3</span>
                   <span>Take a screenshot of the payment receipt</span>
                 </li>
                 <li className="flex gap-3">
-                  <span className="w-6 h-6 bg-yellow-200 rounded-full flex items-center justify-center flex-shrink-0 font-semibold text-yellow-800">4</span>
+                  <span className="w-6 h-6 bg-blue-200 rounded-full flex items-center justify-center flex-shrink-0 font-semibold text-blue-800">4</span>
                   <span>Email the receipt to <strong>editor@amrjournal.com</strong> with your Article ID</span>
                 </li>
                 <li className="flex gap-3">
-                  <span className="w-6 h-6 bg-yellow-200 rounded-full flex items-center justify-center flex-shrink-0 font-semibold text-yellow-800">5</span>
+                  <span className="w-6 h-6 bg-blue-200 rounded-full flex items-center justify-center flex-shrink-0 font-semibold text-blue-800">5</span>
                   <span>Your article will be published within 3-5 working days</span>
                 </li>
               </ol>

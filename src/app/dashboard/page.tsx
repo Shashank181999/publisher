@@ -152,7 +152,7 @@ export default function DashboardPage() {
       case "Revision Required":
         return "bg-orange-100 text-orange-800";
       default:
-        return "bg-yellow-100 text-yellow-800";
+        return "bg-blue-100 text-blue-800";
     }
   };
 
@@ -250,7 +250,7 @@ export default function DashboardPage() {
                     </button>
                     <button
                       onClick={() => handleStatusChange("Under Review")}
-                      className="flex items-center justify-center gap-1 bg-yellow-500 text-white px-3 py-2 rounded-lg hover:bg-yellow-600 transition text-sm font-medium"
+                      className="flex items-center justify-center gap-1 bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 transition text-sm font-medium"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -309,7 +309,7 @@ export default function DashboardPage() {
           <p className="text-xs text-gray-600">Total</p>
         </div>
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3">
-          <p className="text-lg md:text-xl font-bold text-yellow-600">{stats.pending}</p>
+          <p className="text-lg md:text-xl font-bold text-blue-600">{stats.pending}</p>
           <p className="text-xs text-gray-600">Pending</p>
         </div>
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3">

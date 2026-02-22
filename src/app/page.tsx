@@ -1,103 +1,637 @@
+"use client";
+
 import Link from "next/link";
-import Sidebar from "@/components/Sidebar";
-import ArticleCard from "@/components/ArticleCard";
-import { articles, categories, currentVolume } from "@/data/articles";
+import Image from "next/image";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { journals, conferences, authorServices, companyInfo } from "@/data/journals";
+import PublicationJourney from "@/components/PublicationJourney";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Scroll to top on page load
+    window.scrollTo(0, 0);
+
+    const ctx = gsap.context(() => {
+      // Parallax effect for hero background
+      gsap.to(".hero-parallax", {
+        yPercent: 30,
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".hero-section",
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+
+      // Hero animations - immediate
+      const heroTl = gsap.timeline();
+      heroTl
+        .fromTo(".hero-badge", { opacity: 0, y: 20, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.7)" })
+        .fromTo(".hero-title", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, "-=0.3")
+        .fromTo(".hero-desc", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, "-=0.3")
+        .fromTo(".hero-buttons", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, "-=0.2")
+        .fromTo(".hero-stats .stat-item", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.08, ease: "power2.out" }, "-=0.2")
+        .fromTo(".hero-image", { opacity: 0, scale: 0.95, x: 20 }, { opacity: 1, scale: 1, x: 0, duration: 0.6, ease: "power3.out" }, "-=0.5");
+
+      // Section headers - immediate when in view
+      gsap.utils.toArray<HTMLElement>(".section-header").forEach((header) => {
+        gsap.fromTo(
+          header,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: header,
+              start: "top 90%",
+            },
+          }
+        );
+      });
+
+      // Animate sections on scroll - immediate
+      gsap.utils.toArray<HTMLElement>(".animate-section").forEach((section) => {
+        gsap.fromTo(
+          section,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: section,
+              start: "top 90%",
+            },
+          }
+        );
+      });
+
+      // Cards stagger animation - faster
+      gsap.utils.toArray<HTMLElement>(".cards-container").forEach((container) => {
+        const cards = container.querySelectorAll(".card-item");
+        gsap.fromTo(
+          cards,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            stagger: 0.08,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: container,
+              start: "top 90%",
+            },
+          }
+        );
+      });
+
+      // Service list items - faster stagger
+      gsap.utils.toArray<HTMLElement>(".service-list").forEach((list) => {
+        const items = list.querySelectorAll(".service-item");
+        gsap.fromTo(
+          items,
+          { opacity: 0, x: -20 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.4,
+            stagger: 0.1,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: list,
+              start: "top 90%",
+            },
+          }
+        );
+      });
+
+      // Image reveal animation - faster
+      gsap.utils.toArray<HTMLElement>(".reveal-image").forEach((img) => {
+        gsap.fromTo(
+          img,
+          { opacity: 0, scale: 0.95 },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 0.6,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: img,
+              start: "top 90%",
+            },
+          }
+        );
+      });
+
+      // CTA buttons animation - immediate
+      gsap.utils.toArray<HTMLElement>(".cta-button").forEach((btn) => {
+        gsap.fromTo(
+          btn,
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: btn,
+              start: "top 95%",
+            },
+          }
+        );
+      });
+
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Main Content */}
-        <div className="lg:col-span-3">
-          {/* Current Issue Banner */}
-          <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-lg p-6 mb-8">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <div>
-                <h2 className="text-2xl font-bold mb-2">Current Issue</h2>
-                <p className="text-blue-100">
-                  Vol. {currentVolume.volume} No. {currentVolume.issue} (
-                  {currentVolume.year}): {currentVolume.month}{" "}
-                  {currentVolume.year}
+    <div ref={containerRef}>
+      {/* Hero Section - Exactly One Viewport Height */}
+      <section className="hero-section relative h-[calc(100vh-80px)] overflow-hidden">
+        {/* Parallax Background Image */}
+        <div
+          className="hero-parallax absolute inset-0 scale-110 bg-cover bg-center"
+          style={{
+            backgroundImage: 'url(https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1920&q=100)',
+          }}
+        ></div>
+
+        {/* Dark Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#1e3a5f]/95 via-[#1e3a5f]/85 to-[#1e3a5f]/70"></div>
+
+        {/* Animated background elements */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-10 left-10 w-64 h-64 bg-[#c8102e]/20 rounded-full blur-[80px]"></div>
+          <div className="absolute bottom-10 right-10 w-80 h-80 bg-blue-500/15 rounded-full blur-[80px]"></div>
+        </div>
+
+        {/* Pattern overlay */}
+        <div className="absolute inset-0 opacity-[0.03]">
+          <div className="absolute inset-0" style={{
+            backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
+            backgroundSize: '32px 32px'
+          }}></div>
+        </div>
+
+        {/* Main content */}
+        <div className="relative h-full max-w-7xl mx-auto px-4 flex flex-col">
+          {/* Center content */}
+          <div className="flex-1 flex items-center py-8">
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center w-full">
+              {/* Left side - Text content */}
+              <div className="text-white">
+                <div className="hero-badge inline-flex items-center gap-2 bg-[#c8102e] text-white px-4 py-1.5 rounded-full text-sm font-semibold mb-4 shadow-lg shadow-[#c8102e]/30">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                  </span>
+                  UK&apos;s Premier Academic Publisher
+                </div>
+
+                <h1 className="hero-title text-3xl md:text-4xl lg:text-5xl font-bold leading-[1.15] mb-4">
+                  Publish Your Research with
+                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#c8102e] to-red-400"> Great Britain Publishers</span>
+                </h1>
+
+                <p className="hero-desc text-base lg:text-lg text-white/70 mb-6 leading-relaxed max-w-md">
+                  Peer-reviewed, open-access journals publishing high-quality research in Allied Health Sciences and related disciplines.
                 </p>
-                <p className="text-sm text-blue-200 mt-1">
-                  Published:{" "}
-                  {new Date(currentVolume.publishedDate).toLocaleDateString(
-                    "en-US",
-                    {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    }
-                  )}
-                </p>
+
+                <div className="hero-buttons flex flex-wrap gap-3 mb-6">
+                  <Link
+                    href="/journals"
+                    className="group inline-flex items-center gap-2 bg-[#c8102e] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#a00d25] transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                  >
+                    Browse Journals
+                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </Link>
+                  <Link
+                    href="/submissions"
+                    className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white px-6 py-3 rounded-xl font-semibold hover:bg-white hover:text-[#1e3a5f] transition-all duration-300"
+                  >
+                    Submit Research
+                  </Link>
+                </div>
+
+                {/* Stats inline */}
+                <div className="hero-stats flex flex-wrap gap-6">
+                  {[
+                    { value: "7+", label: "Journals" },
+                    { value: "500+", label: "Articles" },
+                    { value: "50+", label: "Countries" },
+                    { value: "100+", label: "Reviewers" },
+                  ].map((stat, i) => (
+                    <div key={i} className="stat-item">
+                      <div className="text-2xl font-bold text-white">{stat.value}</div>
+                      <div className="text-xs text-white/50">{stat.label}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <Link
-                href="/current"
-                className="bg-white text-blue-600 px-6 py-2 rounded-lg font-medium hover:bg-blue-50 transition"
-              >
-                View All Articles
-              </Link>
+
+              {/* Right side - Logo Card */}
+              <div className="hero-image hidden lg:flex justify-center">
+                <div className="relative">
+                  <div className="absolute -inset-3 bg-gradient-to-br from-[#c8102e]/30 to-blue-500/20 rounded-3xl blur-2xl"></div>
+                  <div className="relative bg-white rounded-2xl p-6 shadow-2xl">
+                    <Image
+                      src="/images/logo-2.png"
+                      alt="Great Britain Publishers"
+                      width={200}
+                      height={200}
+                      className="w-44 h-44 mx-auto object-contain"
+                      priority
+                    />
+                    <div className="mt-4 grid grid-cols-2 gap-2">
+                      {[
+                        { label: "Open Access", icon: "🔓" },
+                        { label: "Peer Reviewed", icon: "✓" },
+                        { label: "Fast Review", icon: "⚡" },
+                        { label: "DOI Assigned", icon: "🔗" },
+                      ].map((item, i) => (
+                        <div key={i} className="flex items-center gap-2 p-2.5 bg-[#1e3a5f]/5 rounded-lg">
+                          <span className="text-base">{item.icon}</span>
+                          <span className="text-xs font-medium text-[#1e3a5f]">{item.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Categories Section */}
-          <section className="mb-8">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
-              Browse by Category
-            </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {categories.map((category) => (
-                <Link
-                  key={category.slug}
-                  href={`/category/${category.slug}`}
-                  className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md hover:border-blue-300 transition text-center"
-                >
-                  <h3 className="font-medium text-gray-800">{category.name}</h3>
-                  <p className="text-sm text-gray-500 mt-1">
-                    {category.articleCount} articles
-                  </p>
-                </Link>
-              ))}
-            </div>
-          </section>
+          {/* Scroll indicator at bottom */}
+          <div className="pb-6 flex justify-center">
+            <a href="#categories" className="flex flex-col items-center gap-1 text-white/40 hover:text-white/70 transition-colors">
+              <span className="text-[10px] uppercase tracking-widest">Explore</span>
+              <svg className="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
 
-          {/* Recent Articles */}
-          <section>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-gray-800">
-                Recent Articles
-              </h2>
-              <Link
-                href="/archives"
-                className="text-blue-600 hover:underline text-sm"
-              >
-                View All →
+      {/* Announcement Strip */}
+      <section className="bg-[#c8102e] py-4">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-white text-center">
+            <span className="font-semibold flex items-center gap-2">
+              <span className="text-xl">📢</span> Now Accepting Submissions for 2025!
+            </span>
+            <Link href="/submissions" className="bg-white text-[#c8102e] px-5 py-2 rounded-full text-sm font-semibold hover:bg-[#1e3a5f] hover:text-white transition-all duration-300">
+              Submit Now →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Journal Categories */}
+      <section id="categories" className="py-24 bg-gradient-to-b from-slate-50 to-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="section-header text-center mb-16">
+            <span className="text-[#c8102e] font-semibold text-sm uppercase tracking-wider">Explore</span>
+            <h2 className="text-3xl md:text-5xl font-bold text-[#1e3a5f] mt-3 mb-4">Our Journal Categories</h2>
+            <p className="text-slate-600 max-w-2xl mx-auto text-lg">Peer-reviewed, open-access journals across multiple disciplines</p>
+          </div>
+
+          <div className="cards-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                title: "Allied Health Sciences",
+                desc: "Physical therapy, rehabilitation & healthcare research",
+                journals: "3 Journals",
+                featured: true,
+                image: "/images/logo-allied-health.jpeg",
+              },
+              {
+                title: "Medical Sciences",
+                desc: "Lab technology, diagnostics & clinical research",
+                journals: "2 Journals",
+                image: "/images/logo-medical-sciences.jpeg",
+              },
+              {
+                title: "Rehabilitation & Therapy",
+                desc: "Occupational therapy & patient care studies",
+                journals: "2 Journals",
+                image: "/images/logo-rehab-therapy.jpeg",
+              },
+              {
+                title: "Computer Science & IT",
+                desc: "Software engineering & technology innovation",
+                journals: "2 Journals",
+                image: "/images/logo-cs-it.jpeg",
+              },
+              {
+                title: "Social Sciences",
+                desc: "Psychology, sociology & behavioral studies",
+                journals: "2 Journals",
+                image: "/images/logo-social-sciences.jpeg",
+              },
+            ].map((category, i) => (
+              <Link key={i} href="/journals" className="card-item group block">
+                <div className={`relative bg-white rounded-2xl p-6 h-full min-h-[300px] border transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 ${
+                  category.featured
+                    ? 'border-[#c8102e]/30 shadow-lg shadow-red-100'
+                    : 'border-slate-200 hover:border-[#1e3a5f]/30'
+                }`}>
+                  {/* Featured Badge */}
+                  {category.featured && (
+                    <div className="absolute -top-3 left-6">
+                      <span className="bg-[#c8102e] text-white text-xs px-4 py-1.5 rounded-full font-semibold shadow-lg">
+                        Featured
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Logo Image */}
+                  <div className="relative w-20 h-20 mx-auto mb-6 rounded-2xl overflow-hidden shadow-md group-hover:shadow-lg transition-shadow">
+                    <Image
+                      src={category.image}
+                      alt={category.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+
+                  {/* Content */}
+                  <div className="text-center">
+                    <h3 className="text-[#1e3a5f] font-bold text-lg mb-2 group-hover:text-[#c8102e] transition-colors">
+                      {category.title}
+                    </h3>
+                    <p className="text-slate-500 text-sm mb-5 leading-relaxed">{category.desc}</p>
+
+                    {/* Journal Count */}
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold mb-4 bg-[#1e3a5f]/5 text-[#1e3a5f]">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                      </svg>
+                      {category.journals}
+                    </div>
+
+                    {/* Arrow */}
+                    <div className="flex items-center justify-center gap-1 text-sm font-medium text-[#c8102e] group-hover:text-[#1e3a5f] transition-colors">
+                      <span>Explore</span>
+                      <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          {/* View All Button */}
+          <div className="cta-button text-center mt-12">
+            <Link href="/journals" className="group inline-flex items-center gap-3 bg-[#1e3a5f] text-white px-8 py-4 rounded-xl font-semibold hover:bg-[#c8102e] transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
+              View All Journals
+              <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Publication Steps - Interactive */}
+      <PublicationJourney />
+
+      {/* Services Section */}
+      <section className="py-20 bg-gradient-to-br from-[#c8102e] to-[#a00d25]">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="text-white">
+              <div className="section-header">
+                <span className="inline-block bg-white/20 text-white text-sm px-4 py-1.5 rounded-full font-medium mb-4">Complete Solutions</span>
+                <h2 className="text-3xl md:text-4xl font-bold mb-4">Everything You Need to Publish</h2>
+                <p className="text-white/80 mb-8 text-lg leading-relaxed">
+                  From journals to books to conferences - we support your entire academic journey with professional services.
+                </p>
+              </div>
+
+              <div className="cards-container grid grid-cols-2 gap-4">
+                {[
+                  { title: "Journals", desc: `${journals.length} peer-reviewed`, href: "/journals", icon: "📚" },
+                  { title: "Conferences", desc: "Events & workshops", href: "/conferences", icon: "🎤" },
+                  { title: "Author Services", desc: "Editing & support", href: "/author-services", icon: "✍️" },
+                  { title: "Book Publishing", desc: "Academic books", href: "/books", icon: "📖" },
+                ].map((service, i) => (
+                  <Link key={i} href={service.href} className="card-item group bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/20 hover:bg-white/20 hover:scale-[1.02] transition-all duration-300">
+                    <div className="text-3xl mb-3">{service.icon}</div>
+                    <h3 className="font-semibold text-white group-hover:text-white mb-1">{service.title}</h3>
+                    <p className="text-sm text-white/70">{service.desc}</p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div className="hidden lg:flex items-center justify-center reveal-image">
+              <div className="relative">
+                <div className="relative w-80 h-96 rounded-2xl overflow-hidden shadow-2xl">
+                  <Image
+                    src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1200&q=100"
+                    alt="Academic Research & Publishing"
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#1e3a5f]/80 via-transparent to-transparent"></div>
+                  <div className="absolute bottom-6 left-6 right-6 text-white">
+                    <p className="text-sm font-medium opacity-80">Publishing Excellence</p>
+                    <p className="text-xl font-bold">Your Research, Our Platform</p>
+                  </div>
+                </div>
+
+                {/* Stats Card */}
+                <div className="absolute -bottom-6 -right-6 bg-white rounded-xl p-4 shadow-xl">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-[#c8102e] rounded-full flex items-center justify-center">
+                      <span className="text-white font-bold text-lg">7+</span>
+                    </div>
+                    <div>
+                      <p className="text-[#1e3a5f] font-bold">Journals</p>
+                      <p className="text-slate-500 text-sm">Peer-reviewed</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Events Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="section-header flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12">
+            <div>
+              <span className="text-[#c8102e] font-semibold text-sm uppercase tracking-wider">Events</span>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#1e3a5f] mt-2">Upcoming Conferences</h2>
+            </div>
+            <Link href="/conferences" className="inline-flex items-center gap-2 text-[#c8102e] font-semibold hover:gap-3 transition-all">
+              View All Events
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
+          </div>
+
+          <div className="cards-container grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {conferences.map((event) => (
+              <div key={event.id} className="card-item bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+                <div className={`h-2 ${
+                  event.type === 'conference' ? 'bg-[#1e3a5f]' :
+                  event.type === 'webinar' ? 'bg-[#c8102e]' : 'bg-blue-500'
+                }`}></div>
+                <div className="p-5">
+                  <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mb-3 capitalize ${
+                    event.type === 'conference' ? 'bg-[#1e3a5f]/10 text-[#1e3a5f]' :
+                    event.type === 'webinar' ? 'bg-[#c8102e]/10 text-[#c8102e]' : 'bg-blue-100 text-blue-700'
+                  }`}>{event.type}</span>
+                  <h3 className="font-bold text-[#1e3a5f] mb-3 line-clamp-2 group-hover:text-[#c8102e] transition-colors">{event.title}</h3>
+                  <div className="flex items-center gap-2 text-sm text-slate-500 mb-2">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    {new Date(event.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-slate-500 mb-4">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    </svg>
+                    {event.location}
+                  </div>
+                  <button className="w-full py-2.5 rounded-xl font-semibold bg-[#1e3a5f] hover:bg-[#c8102e] text-white transition-colors text-sm">
+                    Register Now
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Author Services */}
+      <section className="py-20 bg-[#1e3a5f]">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="text-white">
+              <div className="section-header">
+                <span className="inline-block bg-[#c8102e] text-white text-sm px-4 py-1.5 rounded-full font-medium mb-4">Author Services</span>
+                <h2 className="text-3xl md:text-4xl font-bold mb-4">Professional Support for Researchers</h2>
+                <p className="text-white/70 mb-8 text-lg">
+                  From manuscript editing to publication support, we help you succeed at every stage.
+                </p>
+              </div>
+
+              <div className="service-list space-y-4 mb-8">
+                {authorServices.slice(0, 4).map((service) => (
+                  <div key={service.id} className="service-item flex items-start gap-3">
+                    <div className="w-6 h-6 rounded-full bg-[#c8102e] flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">{service.name}</h3>
+                      <p className="text-white/60 text-sm">{service.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <Link href="/author-services" className="cta-button group inline-flex items-center gap-2 bg-[#c8102e] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#a00d25] transition-all duration-300 shadow-lg">
+                Explore All Services
+                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
               </Link>
             </div>
-            <div className="space-y-6">
-              {articles.slice(0, 5).map((article) => (
-                <ArticleCard key={article.id} article={article} />
+
+            <div className="cards-container hidden lg:grid grid-cols-2 gap-4">
+              {authorServices.slice(0, 4).map((service) => (
+                <Link key={service.id} href={`/author-services/${service.slug}`} className="card-item group bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/20 hover:bg-white/20 hover:scale-[1.02] transition-all duration-300">
+                  <h3 className="font-semibold text-white mb-2 group-hover:text-[#c8102e] transition-colors">{service.name}</h3>
+                  <p className="text-white/60 text-sm line-clamp-2">{service.description}</p>
+                </Link>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
 
-            {articles.length > 5 && (
-              <div className="text-center mt-8">
-                <Link
-                  href="/current"
-                  className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
-                >
-                  Load More Articles
-                </Link>
+      {/* Why Choose Us */}
+      <section className="py-20 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="section-header text-center mb-14">
+            <span className="text-[#c8102e] font-semibold text-sm uppercase tracking-wider">Why Us</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#1e3a5f] mt-2 mb-3">Why Choose Great Britain Publishers?</h2>
+            <p className="text-slate-600 max-w-2xl mx-auto">Committed to excellence in academic publishing</p>
+          </div>
+
+          <div className="cards-container grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { title: "Rigorous Review", desc: "Double-blind peer review ensuring quality", icon: "🔍" },
+              { title: "Global Reach", desc: "Readers from 50+ countries worldwide", icon: "🌐" },
+              { title: "Fast Process", desc: "4-6 weeks average review time", icon: "⚡" },
+              { title: "Full Support", desc: "Dedicated editorial team assistance", icon: "💬" },
+            ].map((item, i) => (
+              <div key={i} className="card-item bg-white rounded-2xl p-6 border border-slate-200 text-center hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                <div className="w-16 h-16 bg-gradient-to-br from-[#1e3a5f] to-[#c8102e] rounded-2xl flex items-center justify-center mx-auto mb-5 text-3xl shadow-lg">
+                  {item.icon}
+                </div>
+                <h3 className="font-bold text-[#1e3a5f] mb-2 text-lg">{item.title}</h3>
+                <p className="text-slate-600 text-sm">{item.desc}</p>
               </div>
-            )}
-          </section>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="py-24 bg-gradient-to-br from-[#1e3a5f] via-[#1e3a5f] to-[#152d4a] relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#c8102e]/10 rounded-full blur-[100px]"></div>
+          <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-blue-500/10 rounded-full blur-[80px]"></div>
         </div>
 
-        {/* Sidebar */}
-        <div className="lg:col-span-1">
-          <Sidebar />
+        <div className="relative max-w-4xl mx-auto px-4 text-center">
+          <div className="section-header">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Ready to Publish Your Research?</h2>
+            <p className="text-white/70 text-lg md:text-xl mb-10 max-w-2xl mx-auto">
+              Join thousands of researchers who trust Great Britain Publishers for their academic publications.
+            </p>
+          </div>
+          <div className="cta-button flex flex-wrap justify-center gap-4">
+            <Link href="/submissions" className="group inline-flex items-center gap-2 bg-[#c8102e] text-white px-10 py-4 rounded-xl font-semibold hover:bg-[#a00d25] transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
+              Submit Manuscript
+              <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
+            <Link href="/contact" className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white px-10 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#1e3a5f] transition-all duration-300">
+              Contact Us
+            </Link>
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
