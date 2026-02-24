@@ -2,6 +2,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import Sidebar from "@/components/Sidebar";
 import ArticleCard from "@/components/ArticleCard";
 import { articles, categories, currentVolume } from "@/data/articles";
+import { formatDate } from "@/utils/formatDate";
 
 export default function CurrentIssuePage() {
   const articlesByCategory = categories.map((category) => ({
@@ -29,14 +30,7 @@ export default function CurrentIssuePage() {
             </p>
             <p className="text-sm text-gray-500 mt-2">
               Published:{" "}
-              {new Date(currentVolume.publishedDate).toLocaleDateString(
-                "en-US",
-                {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                }
-              )}
+              {formatDate(currentVolume.publishedDate, 'long')}
             </p>
           </div>
 

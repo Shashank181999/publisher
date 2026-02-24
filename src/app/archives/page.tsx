@@ -2,6 +2,7 @@ import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
 import Sidebar from "@/components/Sidebar";
 import { archives } from "@/data/articles";
+import { formatDate } from "@/utils/formatDate";
 
 export default function ArchivesPage() {
   const volumeGroups = archives.reduce(
@@ -58,7 +59,7 @@ export default function ArchivesPage() {
                         </h3>
                         <p className="text-sm text-gray-500">
                           Published:{" "}
-                          {new Date(issue.publishedDate).toLocaleDateString()}
+                          {formatDate(issue.publishedDate)}
                         </p>
                       </div>
                       <div className="flex items-center gap-2">

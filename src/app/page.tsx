@@ -7,6 +7,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { journals, conferences, authorServices, companyInfo } from "@/data/journals";
 import PublicationJourney from "@/components/PublicationJourney";
+import { formatDate } from "@/utils/formatDate";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -302,6 +303,71 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Featured Journals Banner */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="section-header text-center mb-10">
+            <span className="text-[#c8102e] font-semibold text-sm uppercase tracking-wider">Publications</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#1e3a5f] mt-3 mb-4">Our Flagship Journals</h2>
+            <p className="text-slate-600 max-w-2xl mx-auto">Leading peer-reviewed publications in healthcare, technology, and sciences</p>
+          </div>
+
+          {/* Banner Slider */}
+          <div className="relative overflow-hidden rounded-2xl shadow-2xl">
+            <div className="flex animate-scroll-banner">
+              {[
+                { src: "/images/banner-allied-health.jpeg", name: "Allied Health Sciences" },
+                { src: "/images/banner-medical-sciences.jpeg", name: "Medical Sciences" },
+                { src: "/images/banner-rehab-therapy.jpeg", name: "Rehabilitation & Therapy" },
+                { src: "/images/banner-cs-it.jpeg", name: "Computer Science & IT" },
+                { src: "/images/banner-allied-health.jpeg", name: "Allied Health Sciences" },
+                { src: "/images/banner-medical-sciences.jpeg", name: "Medical Sciences" },
+              ].map((banner, i) => (
+                <div key={i} className="flex-shrink-0 w-full md:w-1/2 lg:w-1/2 p-2">
+                  <Link href="/journals" className="block group">
+                    <div className="relative overflow-hidden rounded-xl">
+                      <Image
+                        src={banner.src}
+                        alt={banner.name}
+                        width={800}
+                        height={250}
+                        className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#1e3a5f]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="absolute bottom-4 left-4 right-4">
+                          <span className="inline-flex items-center gap-2 bg-white/90 text-[#1e3a5f] px-4 py-2 rounded-lg font-semibold text-sm">
+                            Explore Journal
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Quick Stats Below Banner */}
+          <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { icon: "📚", value: "10+", label: "Active Journals" },
+              { icon: "📝", value: "1000+", label: "Published Articles" },
+              { icon: "🌍", value: "50+", label: "Countries Reached" },
+              { icon: "⭐", value: "98%", label: "Author Satisfaction" },
+            ].map((stat, i) => (
+              <div key={i} className="bg-gradient-to-br from-[#1e3a5f] to-[#152d4a] rounded-xl p-5 text-center text-white">
+                <span className="text-2xl mb-2 block">{stat.icon}</span>
+                <div className="text-2xl font-bold">{stat.value}</div>
+                <div className="text-xs text-blue-200 mt-1">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Journal Categories */}
       <section id="categories" className="py-24 bg-gradient-to-b from-slate-50 to-white">
         <div className="max-w-7xl mx-auto px-4">
@@ -509,7 +575,7 @@ export default function Home() {
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    {new Date(event.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    {formatDate(event.date)}
                   </div>
                   <div className="flex items-center gap-2 text-sm text-slate-500 mb-4">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

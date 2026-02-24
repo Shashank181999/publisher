@@ -201,49 +201,103 @@ export const journalCategories = [
 export const conferences: Conference[] = [
   {
     id: 'conf-1',
-    title: 'International Conference on Allied Health Sciences 2024',
+    title: 'International Conference on Allied Health Sciences 2025',
     type: 'conference',
-    date: '2024-06-15',
-    endDate: '2024-06-17',
+    date: '2025-06-15',
+    endDate: '2025-06-17',
     location: 'London, United Kingdom',
     isVirtual: false,
-    description: 'Join leading researchers and practitioners in allied health sciences for three days of presentations, workshops, and networking.',
+    description: 'Join leading researchers and practitioners in allied health sciences for three days of presentations, workshops, and networking. Featuring keynote speakers from top universities worldwide.',
     status: 'upcoming',
-    registrationLink: '#'
+    registrationLink: '#',
+    image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80'
+  },
+  {
+    id: 'conf-2',
+    title: 'Global Medical Research Summit 2025',
+    type: 'conference',
+    date: '2025-09-20',
+    endDate: '2025-09-22',
+    location: 'Edinburgh, Scotland',
+    isVirtual: false,
+    description: 'A premier gathering of medical researchers, clinicians, and healthcare innovators discussing the future of medicine and patient care.',
+    status: 'upcoming',
+    registrationLink: '#',
+    image: 'https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=800&q=80'
   },
   {
     id: 'webinar-1',
     title: 'Advances in Physical Therapy Research Methods',
     type: 'webinar',
-    date: '2024-04-20',
+    date: '2025-04-20',
     location: 'Online',
     isVirtual: true,
-    description: 'A comprehensive webinar exploring the latest research methodologies in physical therapy.',
+    description: 'A comprehensive webinar exploring the latest research methodologies in physical therapy. Learn from experts about innovative approaches to rehabilitation research.',
     status: 'upcoming',
-    registrationLink: '#'
+    registrationLink: '#',
+    image: 'https://images.unsplash.com/photo-1591115765373-5207764f72e7?w=800&q=80'
+  },
+  {
+    id: 'webinar-2',
+    title: 'Digital Health Innovations in Clinical Practice',
+    type: 'webinar',
+    date: '2025-05-15',
+    location: 'Online',
+    isVirtual: true,
+    description: 'Discover how digital technologies are transforming healthcare delivery and patient outcomes. Explore telemedicine, AI diagnostics, and health apps.',
+    status: 'upcoming',
+    registrationLink: '#',
+    image: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&q=80'
   },
   {
     id: 'seminar-1',
     title: 'Evidence-Based Practice in Occupational Therapy',
     type: 'seminar',
-    date: '2024-05-10',
+    date: '2025-05-10',
     location: 'Manchester, UK',
     isVirtual: false,
-    description: 'Explore how to implement evidence-based practices in occupational therapy settings.',
+    description: 'Explore how to implement evidence-based practices in occupational therapy settings. Hands-on sessions with case studies and practical applications.',
     status: 'upcoming',
-    registrationLink: '#'
+    registrationLink: '#',
+    image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80'
+  },
+  {
+    id: 'seminar-2',
+    title: 'Nutrition Science and Public Health',
+    type: 'seminar',
+    date: '2025-07-08',
+    location: 'Birmingham, UK',
+    isVirtual: false,
+    description: 'A focused seminar on the intersection of nutrition science and public health policy. Featuring panel discussions with leading dietitians and policy makers.',
+    status: 'upcoming',
+    registrationLink: '#',
+    image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&q=80'
   },
   {
     id: 'workshop-1',
     title: 'Academic Writing Workshop for Health Professionals',
     type: 'workshop',
-    date: '2024-04-25',
-    endDate: '2024-04-26',
+    date: '2025-04-25',
+    endDate: '2025-04-26',
     location: 'Online',
     isVirtual: true,
-    description: 'Two-day intensive workshop on academic writing, manuscript preparation, and publication strategies.',
+    description: 'Two-day intensive workshop on academic writing, manuscript preparation, and publication strategies. Perfect for early-career researchers.',
     status: 'upcoming',
-    registrationLink: '#'
+    registrationLink: '#',
+    image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&q=80'
+  },
+  {
+    id: 'workshop-2',
+    title: 'Statistical Analysis in Health Research',
+    type: 'workshop',
+    date: '2025-08-12',
+    endDate: '2025-08-13',
+    location: 'Leeds, UK',
+    isVirtual: false,
+    description: 'Hands-on workshop covering statistical methods commonly used in health research. Learn SPSS, R, and data visualization techniques.',
+    status: 'upcoming',
+    registrationLink: '#',
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80'
   }
 ];
 
@@ -326,6 +380,81 @@ export const authorServices: AuthorService[] = [
       'Journal selection advice'
     ],
     icon: 'clipboard-check'
+  },
+  {
+    id: 'guidelines',
+    name: 'Author Guidelines',
+    slug: 'guidelines',
+    description: 'Comprehensive guidelines to help authors prepare and format their manuscripts according to journal requirements and academic standards.',
+    features: [
+      'Manuscript structure requirements',
+      'Formatting and style guidelines',
+      'Reference citation standards',
+      'Ethical guidelines and policies',
+      'Figure and table specifications',
+      'Supplementary material instructions'
+    ],
+    icon: 'clipboard-list'
+  },
+  {
+    id: 'revision',
+    name: 'Revision Assistance',
+    slug: 'revision',
+    description: 'Expert support in addressing reviewer feedback and revising your manuscript to meet publication standards and improve acceptance chances.',
+    features: [
+      'Point-by-point response preparation',
+      'Manuscript revision guidance',
+      'Addressing reviewer comments',
+      'Statistical analysis revision',
+      'Resubmission letter drafting',
+      'Quality assurance review'
+    ],
+    icon: 'refresh'
+  },
+  {
+    id: 'production',
+    name: 'Production Process',
+    slug: 'production',
+    description: 'Learn about what happens after your manuscript is accepted, including copyediting, typesetting, proofing, and final publication stages.',
+    features: [
+      'Professional copyediting',
+      'High-quality typesetting',
+      'Author proof review',
+      'DOI assignment',
+      'Online publication',
+      'Print preparation'
+    ],
+    icon: 'cog'
+  },
+  {
+    id: 'promotion',
+    name: 'Research Promotion',
+    slug: 'promotion',
+    description: 'Maximize the impact of your published research with our promotion and dissemination services to reach a wider audience.',
+    features: [
+      'Social media promotion',
+      'Press release preparation',
+      'Academic network sharing',
+      'Citation tracking',
+      'Altmetric monitoring',
+      'Author branding support'
+    ],
+    icon: 'megaphone'
+  },
+  {
+    id: 'editing',
+    name: 'Professional Editing',
+    slug: 'editing',
+    description: 'Comprehensive editing services for books and manuscripts, including developmental editing, copyediting, and proofreading by experienced editors.',
+    features: [
+      'Developmental editing',
+      'Structural assessment',
+      'Line-by-line copyediting',
+      'Proofreading services',
+      'Consistency checking',
+      'Style guide compliance'
+    ],
+    icon: 'edit'
   }
 ];
 

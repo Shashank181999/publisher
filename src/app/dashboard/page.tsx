@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { formatDate } from "@/utils/formatDate";
 
 interface User {
   email: string;
@@ -185,7 +186,7 @@ export default function DashboardPage() {
                 <div className="space-y-2 text-sm mb-4">
                   <p><span className="text-gray-500">Author:</span> <span className="font-medium">{selectedSubmission.author}</span></p>
                   <p><span className="text-gray-500">Category:</span> <span className="font-medium">{selectedSubmission.category}</span></p>
-                  <p><span className="text-gray-500">Submitted:</span> <span className="font-medium">{new Date(selectedSubmission.submittedDate).toLocaleDateString()}</span></p>
+                  <p><span className="text-gray-500">Submitted:</span> <span className="font-medium">{formatDate(selectedSubmission.submittedDate)}</span></p>
                   <p>
                     <span className="text-gray-500">Status:</span>
                     <span className={`ml-2 px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(selectedSubmission.status)}`}>
@@ -378,7 +379,7 @@ export default function DashboardPage() {
                   <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mb-3">
                     {isAdmin && <span>By: {submission.author}</span>}
                     <span>{submission.category}</span>
-                    <span>{new Date(submission.submittedDate).toLocaleDateString()}</span>
+                    <span>{formatDate(submission.submittedDate)}</span>
                   </div>
 
                   <div className="flex gap-2">

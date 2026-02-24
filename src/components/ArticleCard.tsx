@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Article } from "@/types";
+import { formatDate } from "@/utils/formatDate";
 
 interface ArticleCardProps {
   article: Article;
@@ -54,7 +55,7 @@ export default function ArticleCard({ article }: ArticleCardProps) {
 
       <div className="flex items-center justify-between pt-4 border-t border-gray-100">
         <span className="text-xs text-gray-500">
-          Published: {new Date(article.publishedDate).toLocaleDateString()}
+          Published: {formatDate(article.publishedDate)}
         </span>
         <div className="flex gap-3">
           <Link

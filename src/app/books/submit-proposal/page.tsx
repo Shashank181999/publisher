@@ -35,9 +35,9 @@ export default function SubmitProposalPage() {
 
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-orange-600 to-red-600 text-white p-8">
+          <div className="bg-gradient-to-r from-[#1e3a5f] to-[#152d4a] text-white p-8">
             <h1 className="text-3xl font-bold mb-2">Submit Book Proposal</h1>
-            <p className="text-orange-100">
+            <p className="text-blue-100">
               Share your book idea with us. Our editorial team will review your proposal and get back to you.
             </p>
           </div>
@@ -57,7 +57,7 @@ export default function SubmitProposalPage() {
                     required
                     value={formData.authorName}
                     onChange={(e) => setFormData({ ...formData, authorName: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Dr. John Smith"
                   />
                 </div>
@@ -70,7 +70,7 @@ export default function SubmitProposalPage() {
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="john.smith@university.edu"
                   />
                 </div>
@@ -83,7 +83,7 @@ export default function SubmitProposalPage() {
                     required
                     value={formData.affiliation}
                     onChange={(e) => setFormData({ ...formData, affiliation: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="University / Institution"
                   />
                 </div>
@@ -103,7 +103,7 @@ export default function SubmitProposalPage() {
                     required
                     value={formData.bookTitle}
                     onChange={(e) => setFormData({ ...formData, bookTitle: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Enter proposed book title"
                   />
                 </div>
@@ -116,7 +116,7 @@ export default function SubmitProposalPage() {
                     required
                     value={formData.bookType}
                     onChange={(e) => setFormData({ ...formData, bookType: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
                     <option value="">Select book type</option>
                     <option value="textbook">Textbook</option>
@@ -136,7 +136,7 @@ export default function SubmitProposalPage() {
                     rows={6}
                     value={formData.synopsis}
                     onChange={(e) => setFormData({ ...formData, synopsis: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Provide a brief synopsis of your book (300-500 words). Include the main themes, objectives, and what makes your book unique."
                   />
                 </div>
@@ -150,7 +150,7 @@ export default function SubmitProposalPage() {
                     rows={3}
                     value={formData.targetAudience}
                     onChange={(e) => setFormData({ ...formData, targetAudience: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Who is the primary audience for this book? (e.g., students, researchers, practitioners)"
                   />
                 </div>
@@ -163,7 +163,7 @@ export default function SubmitProposalPage() {
                     rows={6}
                     value={formData.tableOfContents}
                     onChange={(e) => setFormData({ ...formData, tableOfContents: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Provide a draft table of contents with chapter titles and brief descriptions"
                   />
                 </div>
@@ -172,7 +172,7 @@ export default function SubmitProposalPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Sample Chapter (Optional)
                   </label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-orange-400 transition">
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition">
                     <input
                       type="file"
                       accept=".doc,.docx,.pdf"
@@ -199,9 +199,9 @@ export default function SubmitProposalPage() {
 
             {/* Submit */}
             <div className="pt-6 border-t">
-              <div className="bg-orange-50 rounded-lg p-4 mb-6">
-                <h3 className="font-medium text-orange-800 mb-1">What happens next?</h3>
-                <p className="text-orange-700 text-sm">
+              <div className="bg-blue-50 rounded-lg p-4 mb-6">
+                <h3 className="font-medium text-[#1e3a5f] mb-1">What happens next?</h3>
+                <p className="text-gray-700 text-sm">
                   Our editorial team will review your proposal within 2-3 weeks. We may contact you for additional
                   information or to discuss the proposal further. If approved, we will send you a publishing agreement.
                 </p>
@@ -209,7 +209,7 @@ export default function SubmitProposalPage() {
 
               <button
                 type="submit"
-                className="w-full bg-orange-600 text-white py-3 rounded-lg font-semibold hover:bg-orange-700 transition"
+                className="w-full bg-[#1e3a5f] text-white py-3 rounded-lg font-semibold hover:bg-[#152d4a] transition"
               >
                 Submit Proposal
               </button>
@@ -221,7 +221,7 @@ export default function SubmitProposalPage() {
         <div className="mt-8 text-center">
           <p className="text-gray-600">
             Have questions? Contact our editorial team at{" "}
-            <a href="mailto:books@greatbritainpublishers.co.uk" className="text-orange-600 hover:underline">
+            <a href="mailto:books@greatbritainpublishers.co.uk" className="text-[#1e3a5f] hover:underline">
               books@greatbritainpublishers.co.uk
             </a>
           </p>

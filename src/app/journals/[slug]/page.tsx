@@ -70,7 +70,7 @@ export default async function JournalPage({ params }: JournalPageProps) {
   return (
     <div className="bg-gray-50 min-h-screen">
       {/* Journal Header */}
-      <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white">
+      <div className="bg-gradient-to-r from-[#1e3a5f] to-[#152d4a] text-white">
         <div className="max-w-7xl mx-auto px-4 py-8">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-blue-200 mb-6">
@@ -83,7 +83,7 @@ export default async function JournalPage({ params }: JournalPageProps) {
 
           <div className="flex flex-col md:flex-row gap-6 items-start">
             <div className="w-20 h-20 md:w-24 md:h-24 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
-              <span className="text-blue-700 font-bold text-2xl md:text-3xl">{journal.shortName}</span>
+              <span className="text-[#1e3a5f] font-bold text-2xl md:text-3xl">{journal.shortName}</span>
             </div>
             <div className="flex-1">
               <h1 className="text-2xl md:text-3xl font-bold mb-2">{journal.name}</h1>
@@ -91,14 +91,14 @@ export default async function JournalPage({ params }: JournalPageProps) {
               <div className="flex flex-wrap gap-4 text-sm">
                 <span className="bg-blue-700/50 px-3 py-1 rounded-full">ISSN: {journal.issn}</span>
                 <span className="bg-blue-700/50 px-3 py-1 rounded-full">{journal.frequency}</span>
-                <span className="bg-green-600/80 px-3 py-1 rounded-full">Open Access</span>
-                <span className="bg-purple-600/80 px-3 py-1 rounded-full">Peer Reviewed</span>
+                <span className="bg-blue-400/80 px-3 py-1 rounded-full">Open Access</span>
+                <span className="bg-blue-300/80 px-3 py-1 rounded-full">Peer Reviewed</span>
               </div>
             </div>
             <div className="flex gap-3 mt-4 md:mt-0">
               <Link
                 href="/submissions"
-                className="bg-white text-blue-900 px-6 py-2.5 rounded-lg font-semibold hover:bg-blue-50 transition text-sm"
+                className="bg-white text-[#1e3a5f] px-6 py-2.5 rounded-lg font-semibold hover:bg-blue-50 transition text-sm"
               >
                 Submit Paper
               </Link>
@@ -143,16 +143,16 @@ export default async function JournalPage({ params }: JournalPageProps) {
               </div>
 
               <div className="grid md:grid-cols-3 gap-4">
-                <div className="bg-gray-50 rounded-lg p-4 text-center">
-                  <div className="text-3xl font-bold text-blue-600 mb-1">4-6</div>
+                <div className="bg-blue-50 rounded-lg p-4 text-center">
+                  <div className="text-3xl font-bold text-[#1e3a5f] mb-1">4-6</div>
                   <div className="text-sm text-gray-600">Weeks Review Time</div>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-4 text-center">
-                  <div className="text-3xl font-bold text-green-600 mb-1">85%</div>
+                <div className="bg-blue-50 rounded-lg p-4 text-center">
+                  <div className="text-3xl font-bold text-[#1e3a5f] mb-1">85%</div>
                   <div className="text-sm text-gray-600">Acceptance Rate</div>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-4 text-center">
-                  <div className="text-3xl font-bold text-purple-600 mb-1">2-3</div>
+                <div className="bg-blue-50 rounded-lg p-4 text-center">
+                  <div className="text-3xl font-bold text-[#1e3a5f] mb-1">2-3</div>
                   <div className="text-sm text-gray-600">Days to First Decision</div>
                 </div>
               </div>
@@ -188,7 +188,7 @@ export default async function JournalPage({ params }: JournalPageProps) {
               {/* Editor in Chief */}
               <div className="mb-8">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
+                  <span className="w-2 h-2 bg-[#1e3a5f] rounded-full"></span>
                   Editor-in-Chief
                 </h3>
                 <div className="grid md:grid-cols-2 gap-4">
@@ -205,12 +205,12 @@ export default async function JournalPage({ params }: JournalPageProps) {
               {/* Managing Editor */}
               <div className="mb-8">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <span className="w-2 h-2 bg-green-600 rounded-full"></span>
+                  <span className="w-2 h-2 bg-[#1e3a5f] rounded-full"></span>
                   Managing Editor
                 </h3>
                 <div className="grid md:grid-cols-2 gap-4">
                   {editorialBoard['managing-editor'].map((member, idx) => (
-                    <div key={idx} className="bg-green-50 rounded-lg p-4">
+                    <div key={idx} className="bg-blue-50 rounded-lg p-4">
                       <div className="font-semibold text-gray-900">{member.name}</div>
                       <div className="text-sm text-gray-600">{member.affiliation}</div>
                       <div className="text-sm text-gray-500">{member.country}</div>
@@ -222,12 +222,12 @@ export default async function JournalPage({ params }: JournalPageProps) {
               {/* Editors */}
               <div className="mb-8">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <span className="w-2 h-2 bg-purple-600 rounded-full"></span>
+                  <span className="w-2 h-2 bg-[#1e3a5f] rounded-full"></span>
                   Editors
                 </h3>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {editorialBoard['editors'].map((member, idx) => (
-                    <div key={idx} className="bg-purple-50 rounded-lg p-4">
+                    <div key={idx} className="bg-blue-50 rounded-lg p-4">
                       <div className="font-semibold text-gray-900">{member.name}</div>
                       <div className="text-sm text-gray-600">{member.affiliation}</div>
                       <div className="text-sm text-gray-500">{member.country}</div>
@@ -239,12 +239,12 @@ export default async function JournalPage({ params }: JournalPageProps) {
               {/* Assistant Editors */}
               <div className="mb-8">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <span className="w-2 h-2 bg-orange-600 rounded-full"></span>
+                  <span className="w-2 h-2 bg-[#1e3a5f] rounded-full"></span>
                   Assistant Editors
                 </h3>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {editorialBoard['assistant-editors'].map((member, idx) => (
-                    <div key={idx} className="bg-orange-50 rounded-lg p-4">
+                    <div key={idx} className="bg-blue-50 rounded-lg p-4">
                       <div className="font-semibold text-gray-900">{member.name}</div>
                       <div className="text-sm text-gray-600">{member.affiliation}</div>
                       <div className="text-sm text-gray-500">{member.country}</div>
@@ -282,7 +282,7 @@ export default async function JournalPage({ params }: JournalPageProps) {
                 </p>
                 <Link
                   href="/submissions"
-                  className="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition"
+                  className="inline-block bg-[#1e3a5f] text-white px-6 py-2 rounded-lg font-medium hover:bg-[#152d4a] transition"
                 >
                   Submit Your Paper
                 </Link>
@@ -308,25 +308,25 @@ export default async function JournalPage({ params }: JournalPageProps) {
                   <h3 className="text-lg font-semibold text-gray-900 mb-3">Submission Guidelines</h3>
                   <ul className="space-y-2 text-gray-600">
                     <li className="flex items-start gap-2">
-                      <svg className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5 text-[#1e3a5f] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       Manuscripts should be submitted in Microsoft Word format (.doc or .docx)
                     </li>
                     <li className="flex items-start gap-2">
-                      <svg className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5 text-[#1e3a5f] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       Use 12-point Times New Roman font with 1.5 line spacing
                     </li>
                     <li className="flex items-start gap-2">
-                      <svg className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5 text-[#1e3a5f] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       Include abstract (250-300 words) and 4-6 keywords
                     </li>
                     <li className="flex items-start gap-2">
-                      <svg className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5 text-[#1e3a5f] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       Follow APA 7th edition citation style
@@ -363,28 +363,28 @@ export default async function JournalPage({ params }: JournalPageProps) {
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Journal Policies</h2>
 
               <div className="space-y-6">
-                <div className="border-l-4 border-blue-600 pl-4">
+                <div className="border-l-4 border-[#1e3a5f] pl-4">
                   <h3 className="font-semibold text-gray-900 mb-2">Open Access Policy</h3>
                   <p className="text-gray-600 text-sm">
                     This journal provides immediate open access to its content, making research freely available to support global knowledge exchange.
                   </p>
                 </div>
 
-                <div className="border-l-4 border-green-600 pl-4">
+                <div className="border-l-4 border-[#1e3a5f] pl-4">
                   <h3 className="font-semibold text-gray-900 mb-2">Peer Review Policy</h3>
                   <p className="text-gray-600 text-sm">
                     All submissions undergo double-blind peer review. Reviewers and authors remain anonymous throughout the review process.
                   </p>
                 </div>
 
-                <div className="border-l-4 border-purple-600 pl-4">
+                <div className="border-l-4 border-[#1e3a5f] pl-4">
                   <h3 className="font-semibold text-gray-900 mb-2">Publication Ethics</h3>
                   <p className="text-gray-600 text-sm">
                     We follow COPE guidelines for publication ethics. Plagiarism, data fabrication, and duplicate submission are strictly prohibited.
                   </p>
                 </div>
 
-                <div className="border-l-4 border-orange-600 pl-4">
+                <div className="border-l-4 border-[#1e3a5f] pl-4">
                   <h3 className="font-semibold text-gray-900 mb-2">Copyright Policy</h3>
                   <p className="text-gray-600 text-sm">
                     Authors retain copyright under Creative Commons Attribution (CC BY) license, allowing others to share and adapt the work with proper attribution.
@@ -397,14 +397,14 @@ export default async function JournalPage({ params }: JournalPageProps) {
           {/* Sidebar */}
           <div className="lg:col-span-1 space-y-6">
             {/* Submit Box */}
-            <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl p-6 text-white">
+            <div className="bg-gradient-to-br from-[#1e3a5f] to-[#152d4a] rounded-xl p-6 text-white">
               <h3 className="font-bold text-lg mb-3">Submit Your Research</h3>
               <p className="text-blue-100 text-sm mb-4">
                 Ready to publish? Start your submission today.
               </p>
               <Link
                 href="/submissions"
-                className="block w-full bg-white text-blue-600 py-2.5 rounded-lg font-semibold text-center hover:bg-blue-50 transition"
+                className="block w-full bg-white text-[#1e3a5f] py-2.5 rounded-lg font-semibold text-center hover:bg-blue-50 transition"
               >
                 Submit Manuscript
               </Link>
@@ -428,7 +428,7 @@ export default async function JournalPage({ params }: JournalPageProps) {
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-gray-500">Access</dt>
-                  <dd className="text-green-600 font-medium">Open Access</dd>
+                  <dd className="text-[#1e3a5f] font-medium">Open Access</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-gray-500">Review</dt>
@@ -441,7 +441,7 @@ export default async function JournalPage({ params }: JournalPageProps) {
             <div className="bg-white rounded-xl shadow-sm p-6">
               <h3 className="font-bold text-gray-900 mb-4">Article Processing Charge (APC)</h3>
               <div className="text-center py-4">
-                <div className="text-3xl font-bold text-blue-600">£200</div>
+                <div className="text-3xl font-bold text-[#1e3a5f]">£200</div>
                 <div className="text-gray-500 text-sm">per accepted article</div>
               </div>
               <p className="text-gray-600 text-sm mt-4">
@@ -460,19 +460,19 @@ export default async function JournalPage({ params }: JournalPageProps) {
               </p>
               <ul className="space-y-2 text-sm text-gray-700">
                 <li className="flex items-center gap-2">
-                  <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-[#1e3a5f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   Google Scholar
                 </li>
                 <li className="flex items-center gap-2">
-                  <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-[#1e3a5f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   Crossref
                 </li>
                 <li className="flex items-center gap-2">
-                  <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   DOAJ (Applied)

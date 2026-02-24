@@ -5,6 +5,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import GSAPProvider from "@/components/GSAPProvider";
 import ScrollToTop from "@/components/ScrollToTop";
+import Preloader from "@/components/Preloader";
+import ChatBot from "@/components/WhatsAppButton";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -39,14 +41,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en">
       <body className={`${inter.variable} ${raleway.variable} antialiased bg-gray-50 overflow-x-hidden`}>
+        <Preloader />
         <ScrollToTop />
         <GSAPProvider>
           <Header />
           <main className="min-h-screen">{children}</main>
           <Footer />
         </GSAPProvider>
+        <ChatBot />
       </body>
     </html>
   );

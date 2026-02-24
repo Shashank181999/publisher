@@ -35,7 +35,7 @@ export default async function AuthorServicePage({ params }: { params: Promise<{ 
   return (
     <div className="bg-gray-50 min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-white py-16">
+      <section className="bg-gradient-to-br from-[#1e3a5f] via-[#1e3a5f] to-[#152d4a] text-white py-16">
         <div className="max-w-7xl mx-auto px-4">
           <nav className="flex items-center gap-2 text-sm text-blue-200 mb-8">
             <Link href="/" className="hover:text-white transition-colors">Home</Link>
@@ -66,8 +66,8 @@ export default async function AuthorServicePage({ params }: { params: Promise<{ 
                 <div className="space-y-4 mb-8">
                   {service.features.map((feature, index) => (
                     <div key={index} className="flex items-start gap-3">
-                      <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <svg className="w-4 h-4 text-[#1e3a5f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                       </div>
@@ -97,12 +97,12 @@ export default async function AuthorServicePage({ params }: { params: Promise<{ 
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-6 text-white">
+                <div className="bg-gradient-to-r from-[#1e3a5f] to-[#152d4a] rounded-xl p-6 text-white">
                   <h3 className="text-xl font-bold mb-2">Ready to Get Started?</h3>
                   <p className="text-blue-100 mb-4">Contact us today to discuss your requirements and get a quote.</p>
                   <Link
                     href="/contact"
-                    className="inline-block bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition"
+                    className="inline-block bg-white text-[#1e3a5f] px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition"
                   >
                     Contact Us
                   </Link>
@@ -149,12 +149,12 @@ export default async function AuthorServicePage({ params }: { params: Promise<{ 
               </div>
 
               {/* Submit Manuscript */}
-              <div className="bg-gradient-to-br from-green-600 to-green-700 rounded-2xl p-6 text-white">
+              <div className="bg-gradient-to-br from-[#1e3a5f] to-[#152d4a] rounded-2xl p-6 text-white">
                 <h3 className="font-bold mb-2">Submit Your Manuscript</h3>
-                <p className="text-green-100 text-sm mb-4">Ready to publish? Submit your research to our journals.</p>
+                <p className="text-blue-100 text-sm mb-4">Ready to publish? Submit your research to our journals.</p>
                 <Link
                   href="/submissions"
-                  className="block w-full bg-white text-green-600 text-center py-3 rounded-lg font-medium hover:bg-green-50 transition"
+                  className="block w-full bg-white text-[#1e3a5f] text-center py-3 rounded-lg font-medium hover:bg-blue-50 transition"
                 >
                   Submit Now
                 </Link>
