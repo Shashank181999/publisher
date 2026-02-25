@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { journals } from "@/data/journals";
+import OJSArticles from "@/components/OJSArticles";
 
 interface JournalPageProps {
   params: Promise<{ slug: string }>;
@@ -102,6 +103,19 @@ export default async function JournalPage({ params }: JournalPageProps) {
               >
                 Submit Paper
               </Link>
+              {journal.ojsPath && (
+                <a
+                  href={`https://greatbritainjournals.com/index.php/${journal.ojsPath}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-[#c8102e] text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-red-700 transition text-sm flex items-center gap-2"
+                >
+                  View on OJS
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -273,20 +287,26 @@ export default async function JournalPage({ params }: JournalPageProps) {
 
             {/* Current Issue */}
             <section id="current" className="bg-white rounded-xl shadow-sm p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Current Issue</h2>
-              <div className="bg-blue-50 rounded-lg p-6 text-center">
-                <div className="text-6xl mb-4">📚</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Volume 1, Issue 1 (2024)</h3>
-                <p className="text-gray-600 mb-4">
-                  Our inaugural issue is coming soon. Submit your research to be part of our first publication.
-                </p>
-                <Link
-                  href="/submissions"
-                  className="inline-block bg-[#1e3a5f] text-white px-6 py-2 rounded-lg font-medium hover:bg-[#152d4a] transition"
-                >
-                  Submit Your Paper
-                </Link>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-bold text-gray-900">Current Issue</h2>
+                {journal.ojsPath && (
+                  <a
+                    href={`https://greatbritainjournals.com/index.php/${journal.ojsPath}/issue/current`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-blue-600 hover:underline flex items-center gap-1"
+                  >
+                    View on OJS
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                )}
               </div>
+              <OJSArticles
+                journalId={journal.ojsPath || 'bjahs'}
+                limit={10}
+              />
             </section>
 
             {/* Archives */}

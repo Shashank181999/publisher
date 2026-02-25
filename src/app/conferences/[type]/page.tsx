@@ -350,13 +350,13 @@ export default function EventTypePage() {
           <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
             Subscribe to receive notifications about upcoming {typeInfo.titlePlural.toLowerCase()} and early bird registration offers.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-lg mx-auto">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-2xl mx-auto items-center">
             <input
               type="email"
               placeholder="Enter your email"
-              className="flex-1 px-5 py-4 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-white/50 shadow-lg"
+              className="flex-1 w-full sm:w-auto px-6 py-4 rounded-xl bg-white/10 backdrop-blur-sm text-white placeholder-white/60 border-b-2 border-white/30 focus:border-white focus:outline-none transition-all"
             />
-            <button className="bg-white text-[#1e3a5f] px-8 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-all shadow-lg hover:shadow-xl">
+            <button className="bg-white text-[#1e3a5f] px-10 py-4 rounded-xl font-semibold hover:bg-gray-100 transition-all shadow-lg whitespace-nowrap">
               Subscribe
             </button>
           </div>

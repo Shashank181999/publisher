@@ -22,7 +22,7 @@ export default function Footer() {
               </div>
               <div>
                 <h3 className="text-white font-bold text-xl">{companyInfo.name}</h3>
-                <p className="text-blue-300 text-sm mt-1">{companyInfo.address.city}, {companyInfo.address.country}</p>
+                <p className="text-white/60 text-sm mt-1">{companyInfo.address.city}, {companyInfo.address.country}</p>
               </div>
             </div>
             <p className="text-sm mb-6 leading-relaxed text-white/70">
@@ -57,20 +57,20 @@ export default function Footer() {
           {/* Journals */}
           <div>
             <h4 className="text-white font-semibold mb-4 text-base flex items-center gap-2">
-              <span className="w-1.5 h-6 bg-blue-400 rounded-full"></span>
+              <span className="w-1.5 h-6 bg-white rounded-full"></span>
               Our Journals
             </h4>
             <ul className="space-y-2.5 text-sm">
               {journals.slice(0, 5).map((journal) => (
                 <li key={journal.id}>
                   <Link href={`/journals/${journal.slug}`} className="text-white/70 hover:text-white transition flex items-center gap-2 group">
-                    <span className="w-1 h-1 bg-blue-400 rounded-full group-hover:bg-white transition-colors"></span>
+                    <span className="w-1 h-1 bg-white/50 rounded-full group-hover:bg-white transition-colors"></span>
                     {journal.shortName} Journal
                   </Link>
                 </li>
               ))}
               <li>
-                <Link href="/journals" className="text-blue-300 hover:text-white transition font-medium inline-flex items-center gap-1">
+                <Link href="/journals" className="text-white/80 hover:text-white transition font-medium inline-flex items-center gap-1">
                   View All Journals
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -83,37 +83,37 @@ export default function Footer() {
           {/* Quick Links */}
           <div>
             <h4 className="text-white font-semibold mb-4 text-base flex items-center gap-2">
-              <span className="w-1.5 h-6 bg-emerald-400 rounded-full"></span>
+              <span className="w-1.5 h-6 bg-white rounded-full"></span>
               Quick Links
             </h4>
             <ul className="space-y-2.5 text-sm">
               <li>
                 <Link href="/about" className="text-white/70 hover:text-white transition flex items-center gap-2 group">
-                  <span className="w-1 h-1 bg-emerald-400 rounded-full group-hover:bg-white transition-colors"></span>
+                  <span className="w-1 h-1 bg-white/50 rounded-full group-hover:bg-white transition-colors"></span>
                   About Us
                 </Link>
               </li>
               <li>
                 <Link href="/author-services" className="text-white/70 hover:text-white transition flex items-center gap-2 group">
-                  <span className="w-1 h-1 bg-emerald-400 rounded-full group-hover:bg-white transition-colors"></span>
+                  <span className="w-1 h-1 bg-white/50 rounded-full group-hover:bg-white transition-colors"></span>
                   Author Services
                 </Link>
               </li>
               <li>
                 <Link href="/conferences" className="text-white/70 hover:text-white transition flex items-center gap-2 group">
-                  <span className="w-1 h-1 bg-emerald-400 rounded-full group-hover:bg-white transition-colors"></span>
+                  <span className="w-1 h-1 bg-white/50 rounded-full group-hover:bg-white transition-colors"></span>
                   Conferences
                 </Link>
               </li>
               <li>
                 <Link href="/submissions" className="text-white/70 hover:text-white transition flex items-center gap-2 group">
-                  <span className="w-1 h-1 bg-emerald-400 rounded-full group-hover:bg-white transition-colors"></span>
+                  <span className="w-1 h-1 bg-white/50 rounded-full group-hover:bg-white transition-colors"></span>
                   Submit Manuscript
                 </Link>
               </li>
               <li>
                 <Link href="/books/submit-proposal" className="text-white/70 hover:text-white transition flex items-center gap-2 group">
-                  <span className="w-1 h-1 bg-emerald-400 rounded-full group-hover:bg-white transition-colors"></span>
+                  <span className="w-1 h-1 bg-white/50 rounded-full group-hover:bg-white transition-colors"></span>
                   Submit Book Proposal
                 </Link>
               </li>
@@ -123,13 +123,13 @@ export default function Footer() {
           {/* Contact */}
           <div>
             <h4 className="text-white font-semibold mb-4 text-base flex items-center gap-2">
-              <span className="w-1.5 h-6 bg-cyan-400 rounded-full"></span>
+              <span className="w-1.5 h-6 bg-white rounded-full"></span>
               Contact Us
             </h4>
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-3">
                 <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
@@ -142,7 +142,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </div>

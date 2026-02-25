@@ -7,6 +7,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { journals, conferences, authorServices, companyInfo } from "@/data/journals";
 import PublicationJourney from "@/components/PublicationJourney";
+import OJSArticles from "@/components/OJSArticles";
 import { formatDate } from "@/utils/formatDate";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -473,6 +474,200 @@ export default function Home() {
               </svg>
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* Latest Published Articles from OJS */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="section-header text-center mb-12">
+            <span className="text-[#c8102e] font-semibold text-sm uppercase tracking-wider">Latest Research</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#1e3a5f] mt-3 mb-4">Published Articles</h2>
+            <p className="text-slate-600 max-w-2xl mx-auto">Recent publications from our peer-reviewed journals</p>
+          </div>
+
+          <div className="max-w-4xl mx-auto">
+            <OJSArticles limit={5} showJournalName={true} />
+          </div>
+
+          <div className="text-center mt-10">
+            <Link href="/archives" className="group inline-flex items-center gap-2 bg-[#1e3a5f] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#c8102e] transition-all duration-300">
+              View All Articles
+              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Publish With Us */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Image */}
+            <div className="relative">
+              <div className="rounded-2xl overflow-hidden shadow-2xl">
+                <img
+                  src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                  alt="Scientific Research"
+                  className="w-full h-[500px] object-cover"
+                />
+              </div>
+              {/* Stats Overlay */}
+              <div className="absolute -bottom-6 -right-6 bg-[#1e3a5f] text-white p-6 rounded-2xl shadow-xl">
+                <div className="text-4xl font-bold">10+</div>
+                <div className="text-sm text-blue-200">Years of Excellence</div>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div>
+              <span className="inline-block bg-[#c8102e]/10 text-[#c8102e] text-sm px-4 py-1.5 rounded-full font-semibold mb-4">
+                Why Choose Us
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#1e3a5f] mb-6">
+                Your Research Deserves Global Recognition
+              </h2>
+              <p className="text-gray-600 mb-8 text-lg leading-relaxed">
+                We are committed to advancing scientific knowledge by publishing high-quality,
+                peer-reviewed research that makes a real impact in academia and beyond.
+              </p>
+
+              <div className="grid sm:grid-cols-2 gap-4 mb-8">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="text-gray-700 font-medium">Open Access</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="text-gray-700 font-medium">Fast Peer Review</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="text-gray-700 font-medium">DOI Assignment</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="text-gray-700 font-medium">Global Indexing</span>
+                </div>
+              </div>
+
+              <Link
+                href="/about"
+                className="inline-flex items-center gap-2 bg-[#1e3a5f] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#c8102e] transition-colors"
+              >
+                Learn More About Us
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Video Banner Section */}
+      <section className="relative h-[500px] md:h-[600px] overflow-hidden">
+        {/* Video Background */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=1920&q=80"
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src="/images/vidbanner.mp4" type="video/mp4" />
+        </video>
+
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#1e3a5f]/90 via-[#1e3a5f]/70 to-transparent"></div>
+
+        {/* Content */}
+        <div className="relative z-10 h-full flex items-center">
+          <div className="max-w-7xl mx-auto px-4 w-full">
+            <div className="max-w-2xl">
+              <span className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white text-sm px-4 py-2 rounded-full font-medium mb-6">
+                <span className="w-2 h-2 bg-[#c8102e] rounded-full animate-pulse"></span>
+                Now Accepting Submissions
+              </span>
+
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+                Shape the Future of
+                <span className="block text-[#c8102e]">Academic Research</span>
+              </h2>
+
+              <p className="text-white/80 text-lg md:text-xl mb-8 leading-relaxed">
+                Join our global community of researchers, scientists, and academics making groundbreaking contributions to their fields.
+              </p>
+
+              <div className="flex flex-wrap gap-4">
+                <Link
+                  href="/submissions"
+                  className="inline-flex items-center gap-2 bg-[#c8102e] text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#1e3a5f] transition-all duration-300 shadow-lg"
+                >
+                  Submit Your Research
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </Link>
+                <button
+                  onClick={() => {
+                    const video = document.querySelector('video');
+                    if (video) {
+                      video.muted = !video.muted;
+                    }
+                  }}
+                  className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white px-6 py-4 rounded-xl font-semibold hover:bg-white/20 transition-all duration-300 border border-white/20"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                  </svg>
+                  Toggle Sound
+                </button>
+              </div>
+
+              {/* Stats Row */}
+              <div className="flex flex-wrap gap-8 mt-12 pt-8 border-t border-white/20">
+                <div>
+                  <div className="text-3xl md:text-4xl font-bold text-white">500+</div>
+                  <div className="text-white/60 text-sm">Published Articles</div>
+                </div>
+                <div>
+                  <div className="text-3xl md:text-4xl font-bold text-white">50+</div>
+                  <div className="text-white/60 text-sm">Countries</div>
+                </div>
+                <div>
+                  <div className="text-3xl md:text-4xl font-bold text-white">98%</div>
+                  <div className="text-white/60 text-sm">Author Satisfaction</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/50 animate-bounce">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
         </div>
       </section>
 
