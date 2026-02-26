@@ -1,0 +1,28 @@
+{
+  "badge": {
+    "text": "UK's Premier Academic Publisher",
+    "icon": "pulse"
+  },
+  "title": {
+    "line1": "Publish Your Research with",
+    "line2": "Great Britain Publishers"
+  },
+  "description": "Peer-reviewed, open-access journals publishing high-quality research in Allied Health Sciences and related disciplines.",
+  "primaryCta": {
+    "text": "Browse Journals",
+    "link": "/journals"
+  },
+  "secondaryCta": {
+    "text": "Submit Research",
+    "link": "/submissions"
+  },
+  "stats": [
+    { "value": "7+", "label": "Journals" },
+    { "value": "500+", "label": "Articles" },
+    { "value": "50+", "label": "Countries" },
+    { "value": "100+", "label": "Reviewers" }
+  ],
+  "backgroundImage": "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1920&q=100",
+  "backgroundVideo": "/images/vidbanner.mp4",
+  "useVideo": false
+}

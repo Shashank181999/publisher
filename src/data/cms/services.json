@@ -1,0 +1,106 @@
+{
+  "items": [
+    {
+      "id": "manuscript-prep",
+      "name": "Manuscript Preparation",
+      "slug": "manuscript-preparation",
+      "description": "Professional assistance in preparing your manuscript for submission, including formatting, structure, and compliance with journal guidelines.",
+      "features": [
+        "Document formatting to journal standards",
+        "Reference style formatting",
+        "Figure and table preparation",
+        "Supplementary material organization"
+      ],
+      "icon": "document",
+      "isActive": true,
+      "order": 1,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "article-writing",
+      "name": "Article Writing",
+      "slug": "article-writing",
+      "description": "Expert writing services for research articles, review papers, and case studies.",
+      "features": [
+        "Professional academic writing",
+        "Literature review assistance",
+        "Data interpretation support",
+        "Revision and rewriting services"
+      ],
+      "icon": "pencil",
+      "isActive": true,
+      "order": 2,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "english-editing",
+      "name": "English Language Editing",
+      "slug": "english-editing",
+      "description": "Native English editing services to improve clarity, grammar, and academic tone of your manuscript.",
+      "features": [
+        "Grammar and spelling correction",
+        "Sentence structure improvement",
+        "Academic tone enhancement",
+        "Clarity and readability optimization"
+      ],
+      "icon": "language",
+      "isActive": true,
+      "order": 3,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "scientific-editing",
+      "name": "Scientific Editing",
+      "slug": "scientific-editing",
+      "description": "Expert scientific review and editing by specialists in your field to strengthen your research presentation.",
+      "features": [
+        "Technical accuracy review",
+        "Methodology assessment",
+        "Results interpretation support",
+        "Discussion section enhancement"
+      ],
+      "icon": "beaker",
+      "isActive": true,
+      "order": 4,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "similarity-check",
+      "name": "Similarity Review Report",
+      "slug": "similarity-check",
+      "description": "Comprehensive plagiarism and similarity check using industry-leading software with detailed reports.",
+      "features": [
+        "iThenticate/Turnitin check",
+        "Detailed similarity report",
+        "Guidance on reducing similarity",
+        "Certificate of originality"
+      ],
+      "icon": "shield-check",
+      "isActive": true,
+      "order": 5,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "presubmission-review",
+      "name": "Pre-submission Expert Review",
+      "slug": "presubmission-review",
+      "description": "Get your manuscript reviewed by experts before submission to maximize chances of acceptance.",
+      "features": [
+        "Expert peer review",
+        "Constructive feedback",
+        "Revision recommendations",
+        "Journal selection advice"
+      ],
+      "icon": "clipboard-check",
+      "isActive": true,
+      "order": 6,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ]
+}

@@ -5,26 +5,25 @@ import Image from "next/image";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { journals, journalCategories } from "@/data/journals";
+import { journals } from "@/data/journals";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Journal logos mapping for OJS journals
 const journalLogos: { [key: string]: string } = {
-  'pt': '/images/logo-rehab-therapy.jpeg',
-  'mlt': '/images/logo-medical-sciences.jpeg',
-  'slp': '/images/logo-allied-health.jpeg',
-  'ot': '/images/logo-rehab-therapy.jpeg',
-  'ndt': '/images/logo-allied-health.jpeg',
-  'ott': '/images/logo-rehab-therapy.jpeg',
-  'mit': '/images/logo-medical-sciences.jpeg',
+  'bjahs': '/images/logo-allied-health.jpeg',
+  'bjms': '/images/logo-medical-sciences.jpeg',
+  'bjrot': '/images/logo-rehab-therapy.jpeg',
+  'bjcstech': '/images/logo-cs-it.jpeg',
+  'bjss': '/images/logo-social-sciences.jpeg',
 };
 
-// All categories with consistent blue theme colors
-const allCategories = [
+// Categories based on actual OJS journals
+const journalCategories = [
   {
     name: "Allied Health Sciences",
     slug: "ahs",
-    count: 7,
+    count: 2,
     color: "bg-[#1e3a5f]",
     lightColor: "bg-blue-50",
     textColor: "text-[#1e3a5f]",
@@ -37,8 +36,8 @@ const allCategories = [
   },
   {
     name: "Medical Sciences",
-    slug: "medical-sciences",
-    count: 0,
+    slug: "medical",
+    count: 1,
     color: "bg-[#1e3a5f]",
     lightColor: "bg-blue-50",
     textColor: "text-[#1e3a5f]",
@@ -51,8 +50,8 @@ const allCategories = [
   },
   {
     name: "Social Sciences",
-    slug: "social-sciences",
-    count: 0,
+    slug: "social",
+    count: 1,
     color: "bg-[#1e3a5f]",
     lightColor: "bg-blue-50",
     textColor: "text-[#1e3a5f]",
@@ -64,100 +63,16 @@ const allCategories = [
     )
   },
   {
-    name: "History",
-    slug: "history",
-    count: 0,
+    name: "Computer Science & Technology",
+    slug: "other",
+    count: 1,
     color: "bg-[#1e3a5f]",
     lightColor: "bg-blue-50",
     textColor: "text-[#1e3a5f]",
     borderColor: "border-blue-200",
     icon: (
       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-      </svg>
-    )
-  },
-  {
-    name: "Political Science",
-    slug: "political-science",
-    count: 0,
-    color: "bg-[#1e3a5f]",
-    lightColor: "bg-blue-50",
-    textColor: "text-[#1e3a5f]",
-    borderColor: "border-blue-200",
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
-      </svg>
-    )
-  },
-  {
-    name: "International Relations",
-    slug: "international-relations",
-    count: 0,
-    color: "bg-[#1e3a5f]",
-    lightColor: "bg-blue-50",
-    textColor: "text-[#1e3a5f]",
-    borderColor: "border-blue-200",
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
-      </svg>
-    )
-  },
-  {
-    name: "Psychology",
-    slug: "psychology",
-    count: 0,
-    color: "bg-[#1e3a5f]",
-    lightColor: "bg-blue-50",
-    textColor: "text-[#1e3a5f]",
-    borderColor: "border-blue-200",
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
-      </svg>
-    )
-  },
-  {
-    name: "Sociology",
-    slug: "sociology",
-    count: 0,
-    color: "bg-[#1e3a5f]",
-    lightColor: "bg-blue-50",
-    textColor: "text-[#1e3a5f]",
-    borderColor: "border-blue-200",
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-      </svg>
-    )
-  },
-  {
-    name: "Geography",
-    slug: "geography",
-    count: 0,
-    color: "bg-[#1e3a5f]",
-    lightColor: "bg-blue-50",
-    textColor: "text-[#1e3a5f]",
-    borderColor: "border-blue-200",
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z" />
-      </svg>
-    )
-  },
-  {
-    name: "Economics",
-    slug: "economics",
-    count: 0,
-    color: "bg-[#1e3a5f]",
-    lightColor: "bg-blue-50",
-    textColor: "text-[#1e3a5f]",
-    borderColor: "border-blue-200",
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25" />
       </svg>
     )
   },
@@ -325,7 +240,7 @@ export default function JournalsPage() {
                     priority
                   />
                   <div className="absolute -top-3 -right-3 bg-[#1e3a5f] text-white text-sm font-semibold px-4 py-1.5 rounded-full shadow-lg">
-                    {journals.length}+ Journals
+                    5 Journals
                   </div>
                 </div>
               </div>
@@ -335,9 +250,9 @@ export default function JournalsPage() {
           {/* Stats */}
           <div className="stats-container grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 pt-10 border-t border-white/10">
             {[
-              { value: journals.length + "+", label: "Active Journals", icon: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253" },
-              { value: "500+", label: "Articles Published", icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" },
-              { value: "100+", label: "Expert Reviewers", icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" },
+              { value: "5", label: "Active Journals", icon: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253" },
+              { value: "100+", label: "Articles Published", icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" },
+              { value: "50+", label: "Expert Reviewers", icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" },
               { value: "4-6 Weeks", label: "Review Time", icon: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" },
             ].map((stat, i) => (
               <div key={i} className="stat-item text-center p-4 rounded-2xl bg-white/5 border border-white/10">
@@ -352,58 +267,45 @@ export default function JournalsPage() {
         </div>
       </section>
 
-      {/* All Categories Section */}
-      <section className="py-20 bg-slate-50">
+      {/* Categories Section */}
+      <section className="py-16 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="section-title text-center mb-12">
-            <span className="inline-block bg-blue-100 text-blue-700 font-semibold text-sm uppercase tracking-wider px-4 py-1.5 rounded-full mb-4">Explore</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#1e3a5f]">Browse by Category</h2>
+          <div className="section-title text-center mb-10">
+            <span className="inline-block bg-blue-100 text-blue-700 font-semibold text-sm uppercase tracking-wider px-4 py-1.5 rounded-full mb-4">Categories</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#1e3a5f]">Browse by Discipline</h2>
             <p className="text-slate-600 mt-3 max-w-2xl mx-auto">
-              Discover journals across multiple disciplines. Our collection spans health sciences, social sciences, and humanities.
+              Our journals cover health sciences, medical research, social sciences, and technology.
             </p>
           </div>
 
-          <div className="categories-container grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            {allCategories.map((category, i) => (
+          <div className="categories-container grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
+            {journalCategories.map((category, i) => (
               <div
                 key={i}
-                className={`category-card group relative bg-white rounded-2xl p-5 shadow-sm hover:shadow-xl transition-all duration-500 border ${category.borderColor} overflow-hidden ${category.count > 0 ? 'cursor-pointer' : ''}`}
+                className="category-card group relative bg-white rounded-2xl p-5 shadow-sm border border-blue-200 overflow-hidden"
               >
-                {/* Background gradient on hover */}
-                <div className={`absolute inset-0 ${category.lightColor} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
-
                 {/* Icon */}
-                <div className={`relative w-12 h-12 rounded-xl ${category.color} flex items-center justify-center text-white mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                <div className="relative w-12 h-12 rounded-xl bg-[#1e3a5f] flex items-center justify-center text-white mb-4">
                   {category.icon}
                 </div>
 
-                <h3 className={`relative font-bold text-[#1e3a5f] text-sm mb-1 group-hover:${category.textColor} transition-colors duration-300`}>
+                <h3 className="relative font-bold text-[#1e3a5f] text-sm">
                   {category.name}
                 </h3>
-
-                <span className={`relative inline-block text-xs font-medium ${category.count > 0 ? category.textColor : 'text-slate-400'}`}>
-                  {category.count > 0 ? `${category.count} Journals` : 'Coming Soon'}
-                </span>
-
-                {category.count === 0 && (
-                  <div className="absolute top-3 right-3">
-                    <span className="inline-block bg-slate-100 text-slate-500 text-xs px-2 py-0.5 rounded-full">Soon</span>
-                  </div>
-                )}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Featured Journals */}
+      {/* All Journals */}
       <section id="journals" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="section-title flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
             <div>
               <span className="inline-block bg-blue-100 text-blue-700 font-semibold text-sm uppercase tracking-wider px-4 py-1.5 rounded-full mb-4">Our Collection</span>
-              <h2 className="text-3xl md:text-4xl font-bold text-[#1e3a5f]">Allied Health Sciences Journals</h2>
-              <p className="text-slate-600 mt-2">{journals.filter(j => j.category === 'ahs').length} Peer-Reviewed Open Access Journals</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#1e3a5f]">Our Peer-Reviewed Journals</h2>
+              <p className="text-slate-600 mt-2">{journals.length} Open Access Journals</p>
             </div>
             <Link
               href="/submissions"
@@ -417,7 +319,7 @@ export default function JournalsPage() {
           </div>
 
           <div className="journals-grid grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {journals.filter(j => j.category === 'ahs').map((journal) => (
+            {journals.map((journal) => (
               <Link key={journal.id} href={`/journals/${journal.slug}`} className="journal-card group block">
                 <div className="relative bg-white rounded-2xl border border-slate-200 overflow-hidden hover:border-blue-300 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                   {/* Top accent - using gradient that works well */}
@@ -523,29 +425,7 @@ export default function JournalsPage() {
         </div>
       </section>
 
-      {/* Coming Soon Disciplines */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="section-title text-center mb-10">
-            <span className="inline-block bg-blue-100 text-[#1e3a5f] font-semibold text-sm uppercase tracking-wider px-4 py-1.5 rounded-full mb-4">Expanding</span>
-            <h2 className="text-2xl md:text-3xl font-bold text-[#1e3a5f]">More Disciplines Coming Soon</h2>
-            <p className="text-slate-600 mt-3">We are expanding our journal portfolio to cover more research areas</p>
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
-            {journalCategories.filter(cat => cat.count === 0).map((category) => (
-              <div
-                key={category.slug}
-                className="bg-slate-50 rounded-xl px-5 py-3 border border-slate-200 hover:border-blue-300 hover:bg-blue-50 transition-all duration-300"
-              >
-                <span className="text-[#1e3a5f] font-medium text-sm">{category.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section - Fixed colors */}
+      {/* CTA Section */}
       <section className="cta-section py-20 bg-gradient-to-br from-[#1e3a5f] to-[#152d4a] relative overflow-hidden">
         {/* Background decoration - using softer colors */}
         <div className="absolute inset-0">

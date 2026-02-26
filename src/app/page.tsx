@@ -1,898 +1,296 @@
-"use client";
+import { getHomepageContent, getConferences, getServices } from "@/lib/cms";
+import HomeContent from "@/components/HomeContent";
+import type { HomepageContent, CMSConference, CMSService } from "@/types/cms";
 
-import Link from "next/link";
-import Image from "next/image";
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { journals, conferences, authorServices, companyInfo } from "@/data/journals";
-import PublicationJourney from "@/components/PublicationJourney";
-import OJSArticles from "@/components/OJSArticles";
-import { formatDate } from "@/utils/formatDate";
+// Default homepage content fallback
+const defaultHomepage: HomepageContent = {
+  announcement: {
+    enabled: true,
+    icon: "📢",
+    text: "Now Accepting Submissions for 2025!",
+    buttonText: "Submit Now →",
+    buttonLink: "/submissions"
+  },
+  featuredBanners: {
+    title: "Our Flagship Journals",
+    subtitle: "Publications",
+    description: "Leading peer-reviewed publications in healthcare, technology, and sciences",
+    banners: [
+      { src: "/images/banner-allied-health.jpeg", name: "Allied Health Sciences" },
+      { src: "/images/banner-medical-sciences.jpeg", name: "Medical Sciences" },
+      { src: "/images/banner-cs-it.jpeg", name: "Computer Science & IT" },
+      { src: "/images/banner-social-sciences.jpeg", name: "Social Sciences" }
+    ],
+    stats: [
+      { icon: "📚", value: "5", label: "Active Journals" },
+      { icon: "📝", value: "100+", label: "Published Articles" },
+      { icon: "🌍", value: "50+", label: "Countries Reached" },
+      { icon: "⭐", value: "98%", label: "Author Satisfaction" }
+    ]
+  },
+  categories: {
+    title: "Our Journals",
+    subtitle: "Explore",
+    description: "Peer-reviewed, open-access journals across multiple disciplines",
+    items: [
+      {
+        title: "Allied Health Sciences",
+        description: "Healthcare research, rehabilitation & allied health professions",
+        journals: "BJAHS",
+        featured: true,
+        image: "/images/logo-allied-health.jpeg",
+        link: "/journals/allied-health-sciences"
+      },
+      {
+        title: "Medical Science",
+        description: "Clinical medicine, healthcare innovations & medical research",
+        journals: "BJMS",
+        featured: true,
+        image: "/images/logo-medical-sciences.jpeg",
+        link: "/journals/medical-science"
+      },
+      {
+        title: "Radiography & Operation Technology",
+        description: "Medical imaging, surgical technology & perioperative care",
+        journals: "BJROT",
+        featured: false,
+        image: "/images/logo-rehab-therapy.jpeg",
+        link: "/journals/radiography-operation-technology"
+      },
+      {
+        title: "Computer Science & Technology",
+        description: "Software engineering, AI & technology innovation",
+        journals: "BJCSTECH",
+        featured: false,
+        image: "/images/logo-cs-it.jpeg",
+        link: "/journals/computer-science-technology"
+      },
+      {
+        title: "Social Sciences",
+        description: "Psychology, sociology & behavioral studies",
+        journals: "BJSS",
+        featured: false,
+        image: "/images/logo-social-sciences.jpeg",
+        link: "/journals/social-sciences"
+      }
+    ],
+    viewAllText: "View All Journals",
+    viewAllLink: "/journals"
+  },
+  latestArticles: {
+    title: "Published Articles",
+    subtitle: "Latest Research",
+    description: "Recent publications from our peer-reviewed journals",
+    limit: 5,
+    viewAllText: "View All Articles",
+    viewAllLink: "/archives"
+  },
+  whyPublish: {
+    title: "Your Research Deserves Global Recognition",
+    subtitle: "Why Choose Us",
+    description: "We are committed to advancing scientific knowledge by publishing high-quality, peer-reviewed research that makes a real impact in academia and beyond.",
+    image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    yearsExperience: "10+",
+    features: ["Open Access", "Fast Peer Review", "DOI Assignment", "Global Indexing"],
+    buttonText: "Learn More About Us",
+    buttonLink: "/about"
+  },
+  videoBanner: {
+    enabled: true,
+    videoUrl: "/images/vidbanner.mp4",
+    posterImage: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=1920&q=80",
+    badge: "Now Accepting Submissions",
+    title: {
+      line1: "Shape the Future of",
+      line2: "Academic Research"
+    },
+    description: "Join our global community of researchers, scientists, and academics making groundbreaking contributions to their fields.",
+    primaryButton: {
+      text: "Submit Your Research",
+      link: "/submissions"
+    },
+    stats: [
+      { value: "100+", label: "Published Articles" },
+      { value: "50+", label: "Countries" },
+      { value: "98%", label: "Author Satisfaction" }
+    ]
+  },
+  servicesSection: {
+    title: "Everything You Need to Publish",
+    subtitle: "Complete Solutions",
+    description: "From journals to books to conferences - we support your entire academic journey with professional services.",
+    items: [
+      { title: "Journals", description: "5 peer-reviewed", href: "/journals", icon: "📚" },
+      { title: "Conferences", description: "Events & workshops", href: "/conferences", icon: "🎤" },
+      { title: "Author Services", description: "Editing & support", href: "/author-services", icon: "✍️" },
+      { title: "Book Publishing", description: "Academic books", href: "/books", icon: "📖" }
+    ],
+    image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1200&q=100"
+  },
+  eventsSection: {
+    title: "Upcoming Conferences",
+    subtitle: "Events",
+    viewAllText: "View All Events",
+    viewAllLink: "/conferences"
+  },
+  authorServicesSection: {
+    title: "Professional Support for Researchers",
+    subtitle: "Author Services",
+    description: "From manuscript editing to publication support, we help you succeed at every stage.",
+    buttonText: "Explore All Services",
+    buttonLink: "/author-services"
+  },
+  whyChooseUs: {
+    title: "Why Choose Great Britain Publishers?",
+    subtitle: "Why Us",
+    description: "Committed to excellence in academic publishing",
+    items: [
+      { title: "Rigorous Review", description: "Double-blind peer review ensuring quality", icon: "🔍" },
+      { title: "Global Reach", description: "Readers from 50+ countries worldwide", icon: "🌐" },
+      { title: "Fast Process", description: "4-6 weeks average review time", icon: "⚡" },
+      { title: "Full Support", description: "Dedicated editorial team assistance", icon: "💬" }
+    ]
+  },
+  finalCta: {
+    title: "Ready to Publish Your Research?",
+    description: "Join thousands of researchers who trust Great Britain Publishers for their academic publications.",
+    primaryButton: {
+      text: "Submit Manuscript",
+      link: "/submissions"
+    },
+    secondaryButton: {
+      text: "Contact Us",
+      link: "/contact"
+    }
+  }
+};
 
-gsap.registerPlugin(ScrollTrigger);
+// Default conferences fallback
+const defaultConferences: CMSConference[] = [
+  {
+    id: "1",
+    title: "International Conference on Healthcare Innovation",
+    type: "conference",
+    date: "2025-06-15",
+    location: "London, UK",
+    isVirtual: false,
+    description: "Annual healthcare research conference",
+    status: "upcoming",
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: "2",
+    title: "Research Methodology Webinar",
+    type: "webinar",
+    date: "2025-04-20",
+    location: "Online",
+    isVirtual: true,
+    description: "Learn research methodologies",
+    status: "upcoming",
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: "3",
+    title: "Academic Writing Workshop",
+    type: "workshop",
+    date: "2025-05-10",
+    location: "Manchester, UK",
+    isVirtual: false,
+    description: "Improve your academic writing skills",
+    status: "upcoming",
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: "4",
+    title: "Publishing Best Practices Seminar",
+    type: "seminar",
+    date: "2025-07-01",
+    location: "Birmingham, UK",
+    isVirtual: false,
+    description: "Learn from publishing experts",
+    status: "upcoming",
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  }
+];
 
-export default function Home() {
-  const containerRef = useRef<HTMLDivElement>(null);
+// Default services fallback
+const defaultServices: CMSService[] = [
+  {
+    id: "1",
+    name: "Manuscript Editing",
+    slug: "manuscript-editing",
+    description: "Professional editing services for your research papers",
+    features: ["Grammar correction", "Style improvement", "Clarity enhancement"],
+    icon: "✏️",
+    isActive: true,
+    order: 1,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: "2",
+    name: "Plagiarism Check",
+    slug: "plagiarism-check",
+    description: "Comprehensive plagiarism detection and report",
+    features: ["Full document scan", "Detailed report", "Similarity score"],
+    icon: "🔍",
+    isActive: true,
+    order: 2,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: "3",
+    name: "Translation Services",
+    slug: "translation-services",
+    description: "Academic translation by subject experts",
+    features: ["Multiple languages", "Technical accuracy", "Fast turnaround"],
+    icon: "🌐",
+    isActive: true,
+    order: 3,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: "4",
+    name: "Formatting Assistance",
+    slug: "formatting-assistance",
+    description: "Journal-specific formatting and styling",
+    features: ["Citation formatting", "Layout adjustment", "Figure optimization"],
+    icon: "📄",
+    isActive: true,
+    order: 4,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  }
+];
 
-  useEffect(() => {
-    // Scroll to top on page load
-    window.scrollTo(0, 0);
+export default async function Home() {
+  // Fetch CMS data server-side
+  const [homepageData, conferencesData, servicesData] = await Promise.all([
+    getHomepageContent(),
+    getConferences(),
+    getServices()
+  ]);
 
-    const ctx = gsap.context(() => {
-      // Parallax effect for hero background
-      gsap.to(".hero-parallax", {
-        yPercent: 30,
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".hero-section",
-          start: "top top",
-          end: "bottom top",
-          scrub: true,
-        },
-      });
-
-      // Hero animations - immediate
-      const heroTl = gsap.timeline();
-      heroTl
-        .fromTo(".hero-badge", { opacity: 0, y: 20, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.7)" })
-        .fromTo(".hero-title", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, "-=0.3")
-        .fromTo(".hero-desc", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, "-=0.3")
-        .fromTo(".hero-buttons", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, "-=0.2")
-        .fromTo(".hero-stats .stat-item", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.08, ease: "power2.out" }, "-=0.2")
-        .fromTo(".hero-image", { opacity: 0, scale: 0.95, x: 20 }, { opacity: 1, scale: 1, x: 0, duration: 0.6, ease: "power3.out" }, "-=0.5");
-
-      // Section headers - immediate when in view
-      gsap.utils.toArray<HTMLElement>(".section-header").forEach((header) => {
-        gsap.fromTo(
-          header,
-          { opacity: 0, y: 40 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: header,
-              start: "top 90%",
-            },
-          }
-        );
-      });
-
-      // Animate sections on scroll - immediate
-      gsap.utils.toArray<HTMLElement>(".animate-section").forEach((section) => {
-        gsap.fromTo(
-          section,
-          { opacity: 0, y: 40 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: section,
-              start: "top 90%",
-            },
-          }
-        );
-      });
-
-      // Cards stagger animation - faster
-      gsap.utils.toArray<HTMLElement>(".cards-container").forEach((container) => {
-        const cards = container.querySelectorAll(".card-item");
-        gsap.fromTo(
-          cards,
-          { opacity: 0, y: 30 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.5,
-            stagger: 0.08,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: container,
-              start: "top 90%",
-            },
-          }
-        );
-      });
-
-      // Service list items - faster stagger
-      gsap.utils.toArray<HTMLElement>(".service-list").forEach((list) => {
-        const items = list.querySelectorAll(".service-item");
-        gsap.fromTo(
-          items,
-          { opacity: 0, x: -20 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.4,
-            stagger: 0.1,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: list,
-              start: "top 90%",
-            },
-          }
-        );
-      });
-
-      // Image reveal animation - faster
-      gsap.utils.toArray<HTMLElement>(".reveal-image").forEach((img) => {
-        gsap.fromTo(
-          img,
-          { opacity: 0, scale: 0.95 },
-          {
-            opacity: 1,
-            scale: 1,
-            duration: 0.6,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: img,
-              start: "top 90%",
-            },
-          }
-        );
-      });
-
-      // CTA buttons animation - immediate
-      gsap.utils.toArray<HTMLElement>(".cta-button").forEach((btn) => {
-        gsap.fromTo(
-          btn,
-          { opacity: 0, y: 20 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.5,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: btn,
-              start: "top 95%",
-            },
-          }
-        );
-      });
-
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
+  // Use CMS data or fallback to defaults
+  const homepage = homepageData || defaultHomepage;
+  const conferences = conferencesData.length > 0 ? conferencesData : defaultConferences;
+  const services = servicesData.length > 0 ? servicesData : defaultServices;
 
   return (
-    <div ref={containerRef}>
-      {/* Hero Section - Exactly One Viewport Height */}
-      <section className="hero-section relative h-[calc(100vh-80px)] overflow-hidden">
-        {/* Parallax Background Image */}
-        <div
-          className="hero-parallax absolute inset-0 scale-110 bg-cover bg-center"
-          style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1920&q=100)',
-          }}
-        ></div>
-
-        {/* Dark Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1e3a5f]/95 via-[#1e3a5f]/85 to-[#1e3a5f]/70"></div>
-
-        {/* Animated background elements */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-10 left-10 w-64 h-64 bg-[#c8102e]/20 rounded-full blur-[80px]"></div>
-          <div className="absolute bottom-10 right-10 w-80 h-80 bg-blue-500/15 rounded-full blur-[80px]"></div>
-        </div>
-
-        {/* Pattern overlay */}
-        <div className="absolute inset-0 opacity-[0.03]">
-          <div className="absolute inset-0" style={{
-            backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
-            backgroundSize: '32px 32px'
-          }}></div>
-        </div>
-
-        {/* Main content */}
-        <div className="relative h-full max-w-7xl mx-auto px-4 flex flex-col">
-          {/* Center content */}
-          <div className="flex-1 flex items-center py-8">
-            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center w-full">
-              {/* Left side - Text content */}
-              <div className="text-white">
-                <div className="hero-badge inline-flex items-center gap-2 bg-[#c8102e] text-white px-4 py-1.5 rounded-full text-sm font-semibold mb-4 shadow-lg shadow-[#c8102e]/30">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
-                  </span>
-                  UK&apos;s Premier Academic Publisher
-                </div>
-
-                <h1 className="hero-title text-3xl md:text-4xl lg:text-5xl font-bold leading-[1.15] mb-4">
-                  Publish Your Research with
-                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#c8102e] to-red-400"> Great Britain Publishers</span>
-                </h1>
-
-                <p className="hero-desc text-base lg:text-lg text-white/70 mb-6 leading-relaxed max-w-md">
-                  Peer-reviewed, open-access journals publishing high-quality research in Allied Health Sciences and related disciplines.
-                </p>
-
-                <div className="hero-buttons flex flex-wrap gap-3 mb-6">
-                  <Link
-                    href="/journals"
-                    className="group inline-flex items-center gap-2 bg-[#c8102e] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#a00d25] transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-                  >
-                    Browse Journals
-                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </Link>
-                  <Link
-                    href="/submissions"
-                    className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white px-6 py-3 rounded-xl font-semibold hover:bg-white hover:text-[#1e3a5f] transition-all duration-300"
-                  >
-                    Submit Research
-                  </Link>
-                </div>
-
-                {/* Stats inline */}
-                <div className="hero-stats flex flex-wrap gap-6">
-                  {[
-                    { value: "7+", label: "Journals" },
-                    { value: "500+", label: "Articles" },
-                    { value: "50+", label: "Countries" },
-                    { value: "100+", label: "Reviewers" },
-                  ].map((stat, i) => (
-                    <div key={i} className="stat-item">
-                      <div className="text-2xl font-bold text-white">{stat.value}</div>
-                      <div className="text-xs text-white/50">{stat.label}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Right side - Logo Card */}
-              <div className="hero-image hidden lg:flex justify-center">
-                <div className="relative">
-                  <div className="absolute -inset-3 bg-gradient-to-br from-[#c8102e]/30 to-blue-500/20 rounded-3xl blur-2xl"></div>
-                  <div className="relative bg-white rounded-2xl p-6 shadow-2xl">
-                    <Image
-                      src="/images/logo-2.png"
-                      alt="Great Britain Publishers"
-                      width={200}
-                      height={200}
-                      className="w-44 h-44 mx-auto object-contain"
-                      priority
-                    />
-                    <div className="mt-4 grid grid-cols-2 gap-2">
-                      {[
-                        { label: "Open Access", icon: "🔓" },
-                        { label: "Peer Reviewed", icon: "✓" },
-                        { label: "Fast Review", icon: "⚡" },
-                        { label: "DOI Assigned", icon: "🔗" },
-                      ].map((item, i) => (
-                        <div key={i} className="flex items-center gap-2 p-2.5 bg-[#1e3a5f]/5 rounded-lg">
-                          <span className="text-base">{item.icon}</span>
-                          <span className="text-xs font-medium text-[#1e3a5f]">{item.label}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Scroll indicator at bottom */}
-          <div className="pb-6 flex justify-center">
-            <a href="#categories" className="flex flex-col items-center gap-1 text-white/40 hover:text-white/70 transition-colors">
-              <span className="text-[10px] uppercase tracking-widest">Explore</span>
-              <svg className="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-              </svg>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* Announcement Strip */}
-      <section className="bg-[#c8102e] py-4">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex flex-wrap items-center justify-center gap-4 text-white text-center">
-            <span className="font-semibold flex items-center gap-2">
-              <span className="text-xl">📢</span> Now Accepting Submissions for 2025!
-            </span>
-            <Link href="/submissions" className="bg-white text-[#c8102e] px-5 py-2 rounded-full text-sm font-semibold hover:bg-[#1e3a5f] hover:text-white transition-all duration-300">
-              Submit Now →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Journals Banner */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="section-header text-center mb-10">
-            <span className="text-[#c8102e] font-semibold text-sm uppercase tracking-wider">Publications</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#1e3a5f] mt-3 mb-4">Our Flagship Journals</h2>
-            <p className="text-slate-600 max-w-2xl mx-auto">Leading peer-reviewed publications in healthcare, technology, and sciences</p>
-          </div>
-
-          {/* Banner Slider */}
-          <div className="relative overflow-hidden rounded-2xl shadow-2xl">
-            <div className="flex animate-scroll-banner">
-              {[
-                { src: "/images/banner-allied-health.jpeg", name: "Allied Health Sciences" },
-                { src: "/images/banner-medical-sciences.jpeg", name: "Medical Sciences" },
-                { src: "/images/banner-rehab-therapy.jpeg", name: "Rehabilitation & Therapy" },
-                { src: "/images/banner-cs-it.jpeg", name: "Computer Science & IT" },
-                { src: "/images/banner-allied-health.jpeg", name: "Allied Health Sciences" },
-                { src: "/images/banner-medical-sciences.jpeg", name: "Medical Sciences" },
-              ].map((banner, i) => (
-                <div key={i} className="flex-shrink-0 w-full md:w-1/2 lg:w-1/2 p-2">
-                  <Link href="/journals" className="block group">
-                    <div className="relative overflow-hidden rounded-xl">
-                      <Image
-                        src={banner.src}
-                        alt={banner.name}
-                        width={800}
-                        height={250}
-                        className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#1e3a5f]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div className="absolute bottom-4 left-4 right-4">
-                          <span className="inline-flex items-center gap-2 bg-white/90 text-[#1e3a5f] px-4 py-2 rounded-lg font-semibold text-sm">
-                            Explore Journal
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                            </svg>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Quick Stats Below Banner */}
-          <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { icon: "📚", value: "10+", label: "Active Journals" },
-              { icon: "📝", value: "1000+", label: "Published Articles" },
-              { icon: "🌍", value: "50+", label: "Countries Reached" },
-              { icon: "⭐", value: "98%", label: "Author Satisfaction" },
-            ].map((stat, i) => (
-              <div key={i} className="bg-gradient-to-br from-[#1e3a5f] to-[#152d4a] rounded-xl p-5 text-center text-white">
-                <span className="text-2xl mb-2 block">{stat.icon}</span>
-                <div className="text-2xl font-bold">{stat.value}</div>
-                <div className="text-xs text-blue-200 mt-1">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Journal Categories */}
-      <section id="categories" className="py-24 bg-gradient-to-b from-slate-50 to-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="section-header text-center mb-16">
-            <span className="text-[#c8102e] font-semibold text-sm uppercase tracking-wider">Explore</span>
-            <h2 className="text-3xl md:text-5xl font-bold text-[#1e3a5f] mt-3 mb-4">Our Journal Categories</h2>
-            <p className="text-slate-600 max-w-2xl mx-auto text-lg">Peer-reviewed, open-access journals across multiple disciplines</p>
-          </div>
-
-          <div className="cards-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                title: "Allied Health Sciences",
-                desc: "Physical therapy, rehabilitation & healthcare research",
-                journals: "3 Journals",
-                featured: true,
-                image: "/images/logo-allied-health.jpeg",
-              },
-              {
-                title: "Medical Sciences",
-                desc: "Lab technology, diagnostics & clinical research",
-                journals: "2 Journals",
-                image: "/images/logo-medical-sciences.jpeg",
-              },
-              {
-                title: "Rehabilitation & Therapy",
-                desc: "Occupational therapy & patient care studies",
-                journals: "2 Journals",
-                image: "/images/logo-rehab-therapy.jpeg",
-              },
-              {
-                title: "Computer Science & IT",
-                desc: "Software engineering & technology innovation",
-                journals: "2 Journals",
-                image: "/images/logo-cs-it.jpeg",
-              },
-              {
-                title: "Social Sciences",
-                desc: "Psychology, sociology & behavioral studies",
-                journals: "2 Journals",
-                image: "/images/logo-social-sciences.jpeg",
-              },
-            ].map((category, i) => (
-              <Link key={i} href="/journals" className="card-item group block">
-                <div className={`relative bg-white rounded-2xl p-6 h-full min-h-[300px] border transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 ${
-                  category.featured
-                    ? 'border-[#c8102e]/30 shadow-lg shadow-red-100'
-                    : 'border-slate-200 hover:border-[#1e3a5f]/30'
-                }`}>
-                  {/* Featured Badge */}
-                  {category.featured && (
-                    <div className="absolute -top-3 left-6">
-                      <span className="bg-[#c8102e] text-white text-xs px-4 py-1.5 rounded-full font-semibold shadow-lg">
-                        Featured
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Logo Image */}
-                  <div className="relative w-20 h-20 mx-auto mb-6 rounded-2xl overflow-hidden shadow-md group-hover:shadow-lg transition-shadow">
-                    <Image
-                      src={category.image}
-                      alt={category.title}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-
-                  {/* Content */}
-                  <div className="text-center">
-                    <h3 className="text-[#1e3a5f] font-bold text-lg mb-2 group-hover:text-[#c8102e] transition-colors">
-                      {category.title}
-                    </h3>
-                    <p className="text-slate-500 text-sm mb-5 leading-relaxed">{category.desc}</p>
-
-                    {/* Journal Count */}
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold mb-4 bg-[#1e3a5f]/5 text-[#1e3a5f]">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                      </svg>
-                      {category.journals}
-                    </div>
-
-                    {/* Arrow */}
-                    <div className="flex items-center justify-center gap-1 text-sm font-medium text-[#c8102e] group-hover:text-[#1e3a5f] transition-colors">
-                      <span>Explore</span>
-                      <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-
-          {/* View All Button */}
-          <div className="cta-button text-center mt-12">
-            <Link href="/journals" className="group inline-flex items-center gap-3 bg-[#1e3a5f] text-white px-8 py-4 rounded-xl font-semibold hover:bg-[#c8102e] transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
-              View All Journals
-              <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Latest Published Articles from OJS */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="section-header text-center mb-12">
-            <span className="text-[#c8102e] font-semibold text-sm uppercase tracking-wider">Latest Research</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#1e3a5f] mt-3 mb-4">Published Articles</h2>
-            <p className="text-slate-600 max-w-2xl mx-auto">Recent publications from our peer-reviewed journals</p>
-          </div>
-
-          <div className="max-w-4xl mx-auto">
-            <OJSArticles limit={5} showJournalName={true} />
-          </div>
-
-          <div className="text-center mt-10">
-            <Link href="/archives" className="group inline-flex items-center gap-2 bg-[#1e3a5f] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#c8102e] transition-all duration-300">
-              View All Articles
-              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Why Publish With Us */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Image */}
-            <div className="relative">
-              <div className="rounded-2xl overflow-hidden shadow-2xl">
-                <img
-                  src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                  alt="Scientific Research"
-                  className="w-full h-[500px] object-cover"
-                />
-              </div>
-              {/* Stats Overlay */}
-              <div className="absolute -bottom-6 -right-6 bg-[#1e3a5f] text-white p-6 rounded-2xl shadow-xl">
-                <div className="text-4xl font-bold">10+</div>
-                <div className="text-sm text-blue-200">Years of Excellence</div>
-              </div>
-            </div>
-
-            {/* Content */}
-            <div>
-              <span className="inline-block bg-[#c8102e]/10 text-[#c8102e] text-sm px-4 py-1.5 rounded-full font-semibold mb-4">
-                Why Choose Us
-              </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-[#1e3a5f] mb-6">
-                Your Research Deserves Global Recognition
-              </h2>
-              <p className="text-gray-600 mb-8 text-lg leading-relaxed">
-                We are committed to advancing scientific knowledge by publishing high-quality,
-                peer-reviewed research that makes a real impact in academia and beyond.
-              </p>
-
-              <div className="grid sm:grid-cols-2 gap-4 mb-8">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <span className="text-gray-700 font-medium">Open Access</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <span className="text-gray-700 font-medium">Fast Peer Review</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <span className="text-gray-700 font-medium">DOI Assignment</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <span className="text-gray-700 font-medium">Global Indexing</span>
-                </div>
-              </div>
-
-              <Link
-                href="/about"
-                className="inline-flex items-center gap-2 bg-[#1e3a5f] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#c8102e] transition-colors"
-              >
-                Learn More About Us
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Video Banner Section */}
-      <section className="relative h-[500px] md:h-[600px] overflow-hidden">
-        {/* Video Background */}
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=1920&q=80"
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source src="/images/vidbanner.mp4" type="video/mp4" />
-        </video>
-
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1e3a5f]/90 via-[#1e3a5f]/70 to-transparent"></div>
-
-        {/* Content */}
-        <div className="relative z-10 h-full flex items-center">
-          <div className="max-w-7xl mx-auto px-4 w-full">
-            <div className="max-w-2xl">
-              <span className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white text-sm px-4 py-2 rounded-full font-medium mb-6">
-                <span className="w-2 h-2 bg-[#c8102e] rounded-full animate-pulse"></span>
-                Now Accepting Submissions
-              </span>
-
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-                Shape the Future of
-                <span className="block text-[#c8102e]">Academic Research</span>
-              </h2>
-
-              <p className="text-white/80 text-lg md:text-xl mb-8 leading-relaxed">
-                Join our global community of researchers, scientists, and academics making groundbreaking contributions to their fields.
-              </p>
-
-              <div className="flex flex-wrap gap-4">
-                <Link
-                  href="/submissions"
-                  className="inline-flex items-center gap-2 bg-[#c8102e] text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#1e3a5f] transition-all duration-300 shadow-lg"
-                >
-                  Submit Your Research
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </Link>
-                <button
-                  onClick={() => {
-                    const video = document.querySelector('video');
-                    if (video) {
-                      video.muted = !video.muted;
-                    }
-                  }}
-                  className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white px-6 py-4 rounded-xl font-semibold hover:bg-white/20 transition-all duration-300 border border-white/20"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                  </svg>
-                  Toggle Sound
-                </button>
-              </div>
-
-              {/* Stats Row */}
-              <div className="flex flex-wrap gap-8 mt-12 pt-8 border-t border-white/20">
-                <div>
-                  <div className="text-3xl md:text-4xl font-bold text-white">500+</div>
-                  <div className="text-white/60 text-sm">Published Articles</div>
-                </div>
-                <div>
-                  <div className="text-3xl md:text-4xl font-bold text-white">50+</div>
-                  <div className="text-white/60 text-sm">Countries</div>
-                </div>
-                <div>
-                  <div className="text-3xl md:text-4xl font-bold text-white">98%</div>
-                  <div className="text-white/60 text-sm">Author Satisfaction</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/50 animate-bounce">
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
-        </div>
-      </section>
-
-      {/* Publication Steps - Interactive */}
-      <PublicationJourney />
-
-      {/* Services Section */}
-      <section className="py-20 bg-gradient-to-br from-[#c8102e] to-[#a00d25]">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="text-white">
-              <div className="section-header">
-                <span className="inline-block bg-white/20 text-white text-sm px-4 py-1.5 rounded-full font-medium mb-4">Complete Solutions</span>
-                <h2 className="text-3xl md:text-4xl font-bold mb-4">Everything You Need to Publish</h2>
-                <p className="text-white/80 mb-8 text-lg leading-relaxed">
-                  From journals to books to conferences - we support your entire academic journey with professional services.
-                </p>
-              </div>
-
-              <div className="cards-container grid grid-cols-2 gap-4">
-                {[
-                  { title: "Journals", desc: `${journals.length} peer-reviewed`, href: "/journals", icon: "📚" },
-                  { title: "Conferences", desc: "Events & workshops", href: "/conferences", icon: "🎤" },
-                  { title: "Author Services", desc: "Editing & support", href: "/author-services", icon: "✍️" },
-                  { title: "Book Publishing", desc: "Academic books", href: "/books", icon: "📖" },
-                ].map((service, i) => (
-                  <Link key={i} href={service.href} className="card-item group bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/20 hover:bg-white/20 hover:scale-[1.02] transition-all duration-300">
-                    <div className="text-3xl mb-3">{service.icon}</div>
-                    <h3 className="font-semibold text-white group-hover:text-white mb-1">{service.title}</h3>
-                    <p className="text-sm text-white/70">{service.desc}</p>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            <div className="hidden lg:flex items-center justify-center reveal-image">
-              <div className="relative">
-                <div className="relative w-80 h-96 rounded-2xl overflow-hidden shadow-2xl">
-                  <Image
-                    src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1200&q=100"
-                    alt="Academic Research & Publishing"
-                    fill
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1e3a5f]/80 via-transparent to-transparent"></div>
-                  <div className="absolute bottom-6 left-6 right-6 text-white">
-                    <p className="text-sm font-medium opacity-80">Publishing Excellence</p>
-                    <p className="text-xl font-bold">Your Research, Our Platform</p>
-                  </div>
-                </div>
-
-                {/* Stats Card */}
-                <div className="absolute -bottom-6 -right-6 bg-white rounded-xl p-4 shadow-xl">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-[#c8102e] rounded-full flex items-center justify-center">
-                      <span className="text-white font-bold text-lg">7+</span>
-                    </div>
-                    <div>
-                      <p className="text-[#1e3a5f] font-bold">Journals</p>
-                      <p className="text-slate-500 text-sm">Peer-reviewed</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Events Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="section-header flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12">
-            <div>
-              <span className="text-[#c8102e] font-semibold text-sm uppercase tracking-wider">Events</span>
-              <h2 className="text-3xl md:text-4xl font-bold text-[#1e3a5f] mt-2">Upcoming Conferences</h2>
-            </div>
-            <Link href="/conferences" className="inline-flex items-center gap-2 text-[#c8102e] font-semibold hover:gap-3 transition-all">
-              View All Events
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-          </div>
-
-          <div className="cards-container grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {conferences.map((event) => (
-              <div key={event.id} className="card-item bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                <div className={`h-2 ${
-                  event.type === 'conference' ? 'bg-[#1e3a5f]' :
-                  event.type === 'webinar' ? 'bg-[#c8102e]' : 'bg-blue-500'
-                }`}></div>
-                <div className="p-5">
-                  <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mb-3 capitalize ${
-                    event.type === 'conference' ? 'bg-[#1e3a5f]/10 text-[#1e3a5f]' :
-                    event.type === 'webinar' ? 'bg-[#c8102e]/10 text-[#c8102e]' : 'bg-blue-100 text-blue-700'
-                  }`}>{event.type}</span>
-                  <h3 className="font-bold text-[#1e3a5f] mb-3 line-clamp-2 group-hover:text-[#c8102e] transition-colors">{event.title}</h3>
-                  <div className="flex items-center gap-2 text-sm text-slate-500 mb-2">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    {formatDate(event.date)}
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-slate-500 mb-4">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    </svg>
-                    {event.location}
-                  </div>
-                  <button className="w-full py-2.5 rounded-xl font-semibold bg-[#1e3a5f] hover:bg-[#c8102e] text-white transition-colors text-sm">
-                    Register Now
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Author Services */}
-      <section className="py-20 bg-[#1e3a5f]">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="text-white">
-              <div className="section-header">
-                <span className="inline-block bg-[#c8102e] text-white text-sm px-4 py-1.5 rounded-full font-medium mb-4">Author Services</span>
-                <h2 className="text-3xl md:text-4xl font-bold mb-4">Professional Support for Researchers</h2>
-                <p className="text-white/70 mb-8 text-lg">
-                  From manuscript editing to publication support, we help you succeed at every stage.
-                </p>
-              </div>
-
-              <div className="service-list space-y-4 mb-8">
-                {authorServices.slice(0, 4).map((service) => (
-                  <div key={service.id} className="service-item flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-[#c8102e] flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold">{service.name}</h3>
-                      <p className="text-white/60 text-sm">{service.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <Link href="/author-services" className="cta-button group inline-flex items-center gap-2 bg-[#c8102e] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#a00d25] transition-all duration-300 shadow-lg">
-                Explore All Services
-                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </Link>
-            </div>
-
-            <div className="cards-container hidden lg:grid grid-cols-2 gap-4">
-              {authorServices.slice(0, 4).map((service) => (
-                <Link key={service.id} href={`/author-services/${service.slug}`} className="card-item group bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/20 hover:bg-white/20 hover:scale-[1.02] transition-all duration-300">
-                  <h3 className="font-semibold text-white mb-2 group-hover:text-[#c8102e] transition-colors">{service.name}</h3>
-                  <p className="text-white/60 text-sm line-clamp-2">{service.description}</p>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Why Choose Us */}
-      <section className="py-20 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="section-header text-center mb-14">
-            <span className="text-[#c8102e] font-semibold text-sm uppercase tracking-wider">Why Us</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#1e3a5f] mt-2 mb-3">Why Choose Great Britain Publishers?</h2>
-            <p className="text-slate-600 max-w-2xl mx-auto">Committed to excellence in academic publishing</p>
-          </div>
-
-          <div className="cards-container grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { title: "Rigorous Review", desc: "Double-blind peer review ensuring quality", icon: "🔍" },
-              { title: "Global Reach", desc: "Readers from 50+ countries worldwide", icon: "🌐" },
-              { title: "Fast Process", desc: "4-6 weeks average review time", icon: "⚡" },
-              { title: "Full Support", desc: "Dedicated editorial team assistance", icon: "💬" },
-            ].map((item, i) => (
-              <div key={i} className="card-item bg-white rounded-2xl p-6 border border-slate-200 text-center hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#1e3a5f] to-[#c8102e] rounded-2xl flex items-center justify-center mx-auto mb-5 text-3xl shadow-lg">
-                  {item.icon}
-                </div>
-                <h3 className="font-bold text-[#1e3a5f] mb-2 text-lg">{item.title}</h3>
-                <p className="text-slate-600 text-sm">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="py-24 bg-gradient-to-br from-[#1e3a5f] via-[#1e3a5f] to-[#152d4a] relative overflow-hidden">
-        {/* Background decoration */}
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#c8102e]/10 rounded-full blur-[100px]"></div>
-          <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-blue-500/10 rounded-full blur-[80px]"></div>
-        </div>
-
-        <div className="relative max-w-4xl mx-auto px-4 text-center">
-          <div className="section-header">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Ready to Publish Your Research?</h2>
-            <p className="text-white/70 text-lg md:text-xl mb-10 max-w-2xl mx-auto">
-              Join thousands of researchers who trust Great Britain Publishers for their academic publications.
-            </p>
-          </div>
-          <div className="cta-button flex flex-wrap justify-center gap-4">
-            <Link href="/submissions" className="group inline-flex items-center gap-2 bg-[#c8102e] text-white px-10 py-4 rounded-xl font-semibold hover:bg-[#a00d25] transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
-              Submit Manuscript
-              <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-            <Link href="/contact" className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white px-10 py-4 rounded-xl font-semibold hover:bg-white hover:text-[#1e3a5f] transition-all duration-300">
-              Contact Us
-            </Link>
-          </div>
-        </div>
-      </section>
-    </div>
+    <HomeContent
+      homepage={homepage}
+      conferences={conferences}
+      services={services}
+    />
   );
 }

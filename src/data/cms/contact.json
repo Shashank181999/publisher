@@ -1,0 +1,26 @@
+{
+  "company": {
+    "name": "Great Britain Publishers",
+    "tagline": "Advancing Knowledge, Connecting Minds"
+  },
+  "address": {
+    "street": "85 Loch Park Avenue",
+    "city": "Carluke",
+    "postcode": "ML8 5TG",
+    "country": "United Kingdom"
+  },
+  "contact": {
+    "email": "publisher@greatbritainpublishers.co.uk",
+    "alternateEmail": "publisher@greatbritainpublishers.com",
+    "phone": "+44 1234 567890",
+    "whatsapp": "+44 7123 456789"
+  },
+  "social": {
+    "facebook": "https://facebook.com/greatbritainpublishers",
+    "twitter": "https://twitter.com/gbpublishers",
+    "linkedin": "https://linkedin.com/company/great-britain-publishers",
+    "youtube": "https://youtube.com/greatbritainpublishers",
+    "tiktok": "https://tiktok.com/@gbpublishers"
+  },
+  "mapEmbed": ""
+}

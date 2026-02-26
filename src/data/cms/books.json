@@ -1,0 +1,45 @@
+{
+  "title": "Book Publishing Services",
+  "subtitle": "Publish Your Academic Book with Us",
+  "description": "Great Britain Publishers offers comprehensive book publishing services for academic authors, researchers, and institutions. From textbooks to research monographs, we help bring your work to a global audience.",
+  "services": [
+    {
+      "title": "Academic Textbooks",
+      "description": "Publish educational materials for universities and colleges",
+      "icon": "book"
+    },
+    {
+      "title": "Research Monographs",
+      "description": "In-depth scholarly works on specialized topics",
+      "icon": "document"
+    },
+    {
+      "title": "Edited Volumes",
+      "description": "Curated collections of chapters by multiple authors",
+      "icon": "collection"
+    },
+    {
+      "title": "Conference Proceedings",
+      "description": "Published collections of conference papers",
+      "icon": "presentation"
+    }
+  ],
+  "featuredBooks": [
+    {
+      "id": "book-1",
+      "title": "Advances in Allied Health Sciences",
+      "author": "Dr. Sarah Mitchell et al.",
+      "coverImage": "/images/books/allied-health.jpg",
+      "description": "A comprehensive guide to modern allied health practices and research methodologies.",
+      "buyLink": "#"
+    },
+    {
+      "id": "book-2",
+      "title": "Medical Research Methods",
+      "author": "Prof. James Wilson",
+      "coverImage": "/images/books/medical-research.jpg",
+      "description": "Essential research methodologies for medical professionals and researchers.",
+      "buyLink": "#"
+    }
+  ]
+}

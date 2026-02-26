@@ -151,148 +151,15 @@ export const journals: Journal[] = [
     established: 2024,
     subjects: ['Sociology', 'Psychology', 'Political Science', 'Social Research'],
     ojsPath: 'bjss'
-  },
-  // Legacy Journals
-  {
-    id: 'pt',
-    name: 'Journal of Physical Therapy Research',
-    shortName: 'PT',
-    slug: 'physical-therapy',
-    issn: 'XXXX-XXXX',
-    category: 'ahs',
-    description: 'A peer-reviewed journal dedicated to advancing the science and practice of physical therapy through rigorous research and clinical studies.',
-    coverImage: '/images/journals/pt-cover.jpg',
-    editorInChief: {
-      name: 'Dr. Sarah Mitchell',
-      affiliation: 'University of London',
-      email: 'pt-editor@greatbritainpublishers.co.uk'
-    },
-    frequency: 'Quarterly',
-    established: 2024,
-    subjects: ['Rehabilitation', 'Musculoskeletal Therapy', 'Sports Medicine', 'Neurological Rehabilitation']
-  },
-  {
-    id: 'mlt',
-    name: 'Medical Laboratory Technology Journal',
-    shortName: 'MLT',
-    slug: 'medical-lab-technology',
-    issn: 'XXXX-XXXX',
-    category: 'ahs',
-    description: 'Publishing cutting-edge research in clinical laboratory sciences, diagnostic techniques, and medical technology innovations.',
-    coverImage: '/images/journals/mlt-cover.jpg',
-    editorInChief: {
-      name: 'Dr. James Wilson',
-      affiliation: 'Imperial College London',
-      email: 'mlt-editor@greatbritainpublishers.co.uk'
-    },
-    frequency: 'Quarterly',
-    established: 2024,
-    subjects: ['Clinical Chemistry', 'Hematology', 'Microbiology', 'Molecular Diagnostics']
-  },
-  {
-    id: 'slp',
-    name: 'Speech & Language Pathology Review',
-    shortName: 'SLP',
-    slug: 'speech-language-pathology',
-    issn: 'XXXX-XXXX',
-    category: 'ahs',
-    description: 'Advancing research and clinical practice in speech-language pathology, communication disorders, and swallowing sciences.',
-    coverImage: '/images/journals/slp-cover.jpg',
-    editorInChief: {
-      name: 'Dr. Emma Thompson',
-      affiliation: 'University of Edinburgh',
-      email: 'slp-editor@greatbritainpublishers.co.uk'
-    },
-    frequency: 'Quarterly',
-    established: 2024,
-    subjects: ['Speech Disorders', 'Language Development', 'Dysphagia', 'Autism Spectrum Disorders']
-  },
-  {
-    id: 'ot',
-    name: 'Occupational Therapy International',
-    shortName: 'OT',
-    slug: 'occupational-therapy',
-    issn: 'XXXX-XXXX',
-    category: 'ahs',
-    description: 'A global platform for occupational therapy research, evidence-based practice, and professional development.',
-    coverImage: '/images/journals/ot-cover.jpg',
-    editorInChief: {
-      name: 'Dr. Michael Brown',
-      affiliation: 'University of Oxford',
-      email: 'ot-editor@greatbritainpublishers.co.uk'
-    },
-    frequency: 'Quarterly',
-    established: 2024,
-    subjects: ['Pediatric OT', 'Mental Health OT', 'Geriatric Rehabilitation', 'Hand Therapy']
-  },
-  {
-    id: 'ndt',
-    name: 'Nutrition & Dietetics Today',
-    shortName: 'NDT',
-    slug: 'nutrition-dietetics',
-    issn: 'XXXX-XXXX',
-    category: 'ahs',
-    description: 'Publishing innovative research in nutrition science, clinical dietetics, and public health nutrition.',
-    coverImage: '/images/journals/ndt-cover.jpg',
-    editorInChief: {
-      name: 'Dr. Lisa Anderson',
-      affiliation: 'Kings College London',
-      email: 'ndt-editor@greatbritainpublishers.co.uk'
-    },
-    frequency: 'Quarterly',
-    established: 2024,
-    subjects: ['Clinical Nutrition', 'Sports Nutrition', 'Public Health', 'Metabolic Disorders']
-  },
-  {
-    id: 'ott',
-    name: 'Operation Technology Journal',
-    shortName: 'OTT',
-    slug: 'operation-technology',
-    issn: 'XXXX-XXXX',
-    category: 'ahs',
-    description: 'Focusing on surgical technology, perioperative care, and advancements in operating room practices.',
-    coverImage: '/images/journals/ott-cover.jpg',
-    editorInChief: {
-      name: 'Dr. Robert Taylor',
-      affiliation: 'University of Manchester',
-      email: 'ott-editor@greatbritainpublishers.co.uk'
-    },
-    frequency: 'Quarterly',
-    established: 2024,
-    subjects: ['Surgical Technology', 'Perioperative Care', 'Patient Safety', 'Medical Devices']
-  },
-  {
-    id: 'mit',
-    name: 'Medical Imaging Technology Review',
-    shortName: 'MIT',
-    slug: 'medical-imaging-technology',
-    issn: 'XXXX-XXXX',
-    category: 'ahs',
-    description: 'Dedicated to advancements in medical imaging, radiology, and diagnostic imaging technologies.',
-    coverImage: '/images/journals/mit-cover.jpg',
-    editorInChief: {
-      name: 'Dr. Catherine Harris',
-      affiliation: 'University of Cambridge',
-      email: 'mit-editor@greatbritainpublishers.co.uk'
-    },
-    frequency: 'Quarterly',
-    established: 2024,
-    subjects: ['Radiology', 'MRI Technology', 'CT Imaging', 'Nuclear Medicine']
   }
 ];
 
-// Additional Subject Categories
+// Journal Categories (OJS Journals Only)
 export const journalCategories = [
-  { name: 'Allied Health Sciences', slug: 'ahs', count: 7 },
-  { name: 'Medical Sciences', slug: 'medical-sciences', count: 0 },
-  { name: 'Social Sciences', slug: 'social-sciences', count: 0 },
-  { name: 'History', slug: 'history', count: 0 },
-  { name: 'Political Science', slug: 'political-science', count: 0 },
-  { name: 'International Relations', slug: 'international-relations', count: 0 },
-  { name: 'Psychology', slug: 'psychology', count: 0 },
-  { name: 'Sociology', slug: 'sociology', count: 0 },
-  { name: 'Geography', slug: 'geography', count: 0 },
-  { name: 'Economics', slug: 'economics', count: 0 },
+  { name: 'Allied Health Sciences', slug: 'ahs', count: 2 },
+  { name: 'Medical Sciences', slug: 'medical', count: 1 },
+  { name: 'Social Sciences', slug: 'social', count: 1 },
+  { name: 'Computer Science & Technology', slug: 'other', count: 1 },
 ];
 
 // Conferences Data

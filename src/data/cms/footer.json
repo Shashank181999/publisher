@@ -1,0 +1,27 @@
+{
+  "description": "Great Britain Publishers is a leading academic publisher committed to advancing scientific knowledge through peer-reviewed, open-access publications.",
+  "quickLinks": [
+    { "label": "Home", "href": "/" },
+    { "label": "About Us", "href": "/about" },
+    { "label": "Journals", "href": "/journals" },
+    { "label": "Contact", "href": "/contact" }
+  ],
+  "journalLinks": [
+    { "label": "Allied Health Sciences", "href": "/journals/allied-health-sciences" },
+    { "label": "Medical Science", "href": "/journals/medical-science" },
+    { "label": "Computer Science", "href": "/journals/computer-science-technology" },
+    { "label": "Social Sciences", "href": "/journals/social-sciences" }
+  ],
+  "resourceLinks": [
+    { "label": "Author Services", "href": "/author-services" },
+    { "label": "Submit Manuscript", "href": "/submissions" },
+    { "label": "Conferences", "href": "/conferences" },
+    { "label": "Books", "href": "/books" }
+  ],
+  "copyright": "2024 Great Britain Publishers. All rights reserved.",
+  "bottomLinks": [
+    { "label": "Privacy Policy", "href": "/privacy" },
+    { "label": "Terms of Service", "href": "/terms" },
+    { "label": "Cookie Policy", "href": "/cookies" }
+  ]
+}

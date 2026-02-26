@@ -1,0 +1,36 @@
+{
+  "title": "About Great Britain Publishers",
+  "subtitle": "Advancing Knowledge, Connecting Minds",
+  "description": "Great Britain Publishers brings together extraordinary clinicians, research scientists, brilliant academicians and health professionals to solve fundamental scientific problems and innovate scientific products.",
+  "mission": "We manage scientific journals, provide author services, organize seminars/conferences, and platform for showcasing skills and scientific knowledge. This is committed to providing a platform for global researchers, academicians and practitioners to share research findings and clinical expertise for applying scientific knowledge and evidence-based practice to improve health and advance human progress.",
+  "vision": "To be the leading academic publisher in the UK, recognized globally for publishing high-quality, impactful research across diverse disciplines.",
+  "values": [
+    {
+      "title": "Excellence",
+      "description": "Committed to the highest standards in academic publishing",
+      "icon": "star"
+    },
+    {
+      "title": "Integrity",
+      "description": "Upholding ethical standards in all our practices",
+      "icon": "shield"
+    },
+    {
+      "title": "Innovation",
+      "description": "Embracing new technologies and methodologies",
+      "icon": "lightbulb"
+    },
+    {
+      "title": "Collaboration",
+      "description": "Building global partnerships in academia",
+      "icon": "users"
+    }
+  ],
+  "teamImage": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80",
+  "stats": [
+    { "value": "10+", "label": "Years of Excellence" },
+    { "value": "7+", "label": "Active Journals" },
+    { "value": "500+", "label": "Published Articles" },
+    { "value": "50+", "label": "Countries Reached" }
+  ]
+}

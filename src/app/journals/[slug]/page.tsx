@@ -1,40 +1,15 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
-import { journals } from "@/data/journals";
-import OJSArticles from "@/components/OJSArticles";
+import { getJournals, getJournalBySlug } from "@/lib/cms";
+import { getOJSJournalData, getOJSArchives } from "@/lib/ojs";
 
 interface JournalPageProps {
   params: Promise<{ slug: string }>;
 }
 
-// Editorial Board Data (sample)
-const editorialBoard = {
-  'editor-in-chief': [
-    { name: 'Prof. Sarah Mitchell', affiliation: 'University of London', country: 'United Kingdom' }
-  ],
-  'managing-editor': [
-    { name: 'Dr. James Wilson', affiliation: 'Imperial College London', country: 'United Kingdom' }
-  ],
-  'editors': [
-    { name: 'Dr. Emma Thompson', affiliation: 'University of Edinburgh', country: 'United Kingdom' },
-    { name: 'Dr. Michael Brown', affiliation: 'University of Oxford', country: 'United Kingdom' },
-    { name: 'Dr. Lisa Anderson', affiliation: 'Kings College London', country: 'United Kingdom' },
-  ],
-  'assistant-editors': [
-    { name: 'Dr. Robert Taylor', affiliation: 'University of Manchester', country: 'United Kingdom' },
-    { name: 'Dr. Catherine Harris', affiliation: 'University of Cambridge', country: 'United Kingdom' },
-  ]
-};
-
-// Advisory Board
-const advisoryBoard = [
-  { name: 'Prof. John Smith', affiliation: 'Harvard Medical School', country: 'USA' },
-  { name: 'Prof. Maria Garcia', affiliation: 'University of Barcelona', country: 'Spain' },
-  { name: 'Prof. Hiroshi Tanaka', affiliation: 'University of Tokyo', country: 'Japan' },
-  { name: 'Prof. Anna Mueller', affiliation: 'University of Munich', country: 'Germany' },
-];
-
 export async function generateStaticParams() {
+  const journals = await getJournals();
   return journals.map((journal) => ({
     slug: journal.slug,
   }));
@@ -42,488 +17,454 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: JournalPageProps) {
   const { slug } = await params;
-  const journal = journals.find((j) => j.slug === slug);
-  if (!journal) return { title: 'Journal Not Found' };
+  const cmsJournal = await getJournalBySlug(slug);
+  if (!cmsJournal) return { title: 'Journal Not Found' };
+
+  let ojsData = null;
+  if (cmsJournal.ojsPath) {
+    try {
+      ojsData = await getOJSJournalData(cmsJournal.ojsPath);
+    } catch (error) {
+      console.error('Error fetching OJS data:', error);
+    }
+  }
+
   return {
-    title: `${journal.name} | Great Britain Publishers`,
-    description: journal.description,
+    title: `${ojsData?.name || cmsJournal.name} | Great Britain Publishers`,
+    description: ojsData?.aboutTheJournal || cmsJournal.description,
   };
 }
 
+// Preview articles for demonstration
+const PREVIEW_ARTICLES: Record<string, { id: number; title: string; authors: string[] }[]> = {
+  'allied-health-sciences': [
+    { id: 1, title: "Effectiveness of Telerehabilitation in Post-Stroke Recovery: A Systematic Review", authors: ["Dr. Sarah Mitchell", "Prof. James Anderson"] },
+    { id: 2, title: "Impact of Physical Therapy on Chronic Pain Management in Elderly Patients", authors: ["Dr. Emily Watson", "Dr. Michael Brown"] },
+  ],
+  'medical-science': [
+    { id: 1, title: "Artificial Intelligence in Medical Diagnostics: Current Applications and Future Perspectives", authors: ["Dr. Ahmed Khan", "Dr. Emily Roberts"] },
+    { id: 2, title: "Novel Biomarkers for Early Detection of Cardiovascular Disease", authors: ["Prof. David Wilson", "Dr. Lisa Chen"] },
+  ],
+  'radiography-operation-technology': [
+    { id: 1, title: "Advances in Digital Radiography: Image Quality Optimization Techniques", authors: ["Prof. David Wilson", "Dr. Lisa Chen"] },
+    { id: 2, title: "Radiation Dose Reduction in Pediatric CT Imaging", authors: ["Dr. James Taylor", "Dr. Maria Garcia"] },
+  ],
+  'computer-science-technology': [
+    { id: 1, title: "Machine Learning Approaches for Cybersecurity Threat Detection", authors: ["Dr. Michael Brown", "Dr. Priya Sharma"] },
+    { id: 2, title: "Blockchain Technology in Healthcare Data Management", authors: ["Dr. Alex Turner", "Prof. Sarah Lee"] },
+  ],
+  'social-sciences': [
+    { id: 1, title: "Impact of Social Media on Adolescent Mental Health: A Cross-Cultural Study", authors: ["Dr. Jennifer Lee", "Prof. Hassan Ali"] },
+    { id: 2, title: "Remote Work and Employee Well-being: Post-Pandemic Analysis", authors: ["Dr. Emma Davis", "Dr. Robert Johnson"] },
+  ],
+};
+
 export default async function JournalPage({ params }: JournalPageProps) {
   const { slug } = await params;
-  const journal = journals.find((j) => j.slug === slug);
+  const cmsJournal = await getJournalBySlug(slug);
 
-  if (!journal) {
+  if (!cmsJournal) {
     notFound();
   }
 
-  const tabs = [
-    { id: 'home', name: 'Home', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-    { id: 'about', name: 'About', icon: 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
-    { id: 'editorial', name: 'Editorial Board', icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z' },
-    { id: 'current', name: 'Current Issue', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
-    { id: 'archives', name: 'Archives', icon: 'M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4' },
-    { id: 'author-info', name: 'For Authors', icon: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z' },
-    { id: 'policies', name: 'Policies', icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' },
+  let ojsData = null;
+  let ojsArchives: Awaited<ReturnType<typeof getOJSArchives>> = [];
+
+  if (cmsJournal.ojsPath) {
+    try {
+      [ojsData, ojsArchives] = await Promise.all([
+        getOJSJournalData(cmsJournal.ojsPath),
+        getOJSArchives(cmsJournal.ojsPath),
+      ]);
+    } catch (error) {
+      console.error('Error fetching OJS data:', error);
+    }
+  }
+
+  // Use preview articles if no real articles (for demonstration)
+  const previewArticles = PREVIEW_ARTICLES[slug] || [];
+  const hasPreviewContent = previewArticles.length > 0;
+
+  const navItems = [
+    { label: "Home", href: `/journals/${slug}` },
+    { label: "About", href: `/journals/${slug}/about` },
+    { label: "Current Issue", href: `/journals/${slug}/current` },
+    { label: "Archives", href: `/journals/${slug}/archives` },
+    { label: "Submit", href: `/journals/${slug}/submissions` },
+    { label: "Editorial Board", href: `/journals/${slug}/editorial-board` },
   ];
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      {/* Journal Header */}
-      <div className="bg-gradient-to-r from-[#1e3a5f] to-[#152d4a] text-white">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-sm text-blue-200 mb-6">
-            <Link href="/" className="hover:text-white">Home</Link>
+      {/* Hero Header */}
+      <div className="bg-gradient-to-br from-[#1e3a5f] via-[#2d4a6f] to-[#1e3a5f] text-white">
+        {/* Breadcrumb */}
+        <div className="max-w-7xl mx-auto px-4 pt-4">
+          <nav className="flex items-center gap-2 text-sm text-blue-200">
+            <Link href="/" className="hover:text-white transition">Home</Link>
             <span>/</span>
-            <Link href="/journals" className="hover:text-white">Journals</Link>
+            <Link href="/journals" className="hover:text-white transition">Journals</Link>
             <span>/</span>
-            <span className="text-white font-medium">{journal.shortName}</span>
+            <span className="text-white">{ojsData?.shortName || cmsJournal.name}</span>
           </nav>
+        </div>
 
-          <div className="flex flex-col md:flex-row gap-6 items-start">
-            <div className="w-20 h-20 md:w-24 md:h-24 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
-              <span className="text-[#1e3a5f] font-bold text-2xl md:text-3xl">{journal.shortName}</span>
-            </div>
-            <div className="flex-1">
-              <h1 className="text-2xl md:text-3xl font-bold mb-2">{journal.name}</h1>
-              <p className="text-blue-200 mb-4">{journal.description}</p>
-              <div className="flex flex-wrap gap-4 text-sm">
-                <span className="bg-blue-700/50 px-3 py-1 rounded-full">ISSN: {journal.issn}</span>
-                <span className="bg-blue-700/50 px-3 py-1 rounded-full">{journal.frequency}</span>
-                <span className="bg-blue-400/80 px-3 py-1 rounded-full">Open Access</span>
-                <span className="bg-blue-300/80 px-3 py-1 rounded-full">Peer Reviewed</span>
+        {/* Journal Header */}
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            {/* Journal Logo */}
+            {ojsData?.logoUrl && (
+              <div className="w-32 h-32 bg-white rounded-xl shadow-lg p-2 flex-shrink-0">
+                <Image
+                  src={ojsData.logoUrl}
+                  alt={ojsData.name}
+                  width={120}
+                  height={120}
+                  className="w-full h-full object-contain"
+                  unoptimized
+                />
+              </div>
+            )}
+            <div className="text-center md:text-left">
+              <h1 className="text-2xl md:text-3xl font-bold mb-2">
+                {ojsData?.name || cmsJournal.name}
+              </h1>
+              <p className="text-blue-200 text-sm md:text-base">
+                ISSN: {cmsJournal.issn || 'Pending'} | Open Access | Peer Reviewed
+              </p>
+              <div className="flex flex-wrap justify-center md:justify-start gap-3 mt-4">
+                <span className="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">
+                  Quarterly Publication
+                </span>
+                <span className="px-3 py-1 bg-green-500/20 text-green-200 rounded-full text-xs font-medium">
+                  Accepting Submissions
+                </span>
               </div>
             </div>
-            <div className="flex gap-3 mt-4 md:mt-0">
-              <Link
-                href="/submissions"
-                className="bg-white text-[#1e3a5f] px-6 py-2.5 rounded-lg font-semibold hover:bg-blue-50 transition text-sm"
-              >
-                Submit Paper
-              </Link>
-              {journal.ojsPath && (
-                <a
-                  href={`https://greatbritainjournals.com/index.php/${journal.ojsPath}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-[#c8102e] text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-red-700 transition text-sm flex items-center gap-2"
+          </div>
+        </div>
+
+        {/* Navigation */}
+        <div className="border-t border-white/10">
+          <div className="max-w-7xl mx-auto px-4">
+            <nav className="flex items-center gap-1 overflow-x-auto scrollbar-hide">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="px-4 py-3 text-sm font-medium hover:bg-white/10 transition whitespace-nowrap rounded-t-lg"
                 >
-                  View on OJS
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </a>
-              )}
-            </div>
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
           </div>
         </div>
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="bg-white border-b border-gray-200 sticky top-[60px] z-40">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex overflow-x-auto scrollbar-hide">
-            {tabs.map((tab) => (
-              <a
-                key={tab.id}
-                href={`#${tab.id}`}
-                className="flex items-center gap-2 px-4 py-4 text-sm font-medium text-gray-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600 transition whitespace-nowrap"
-              >
-                {tab.name}
-              </a>
-            ))}
+      {/* Banner Image */}
+      {ojsData?.homepageImageUrl && (
+        <div className="bg-white border-b">
+          <div className="max-w-7xl mx-auto">
+            <Image
+              src={ojsData.homepageImageUrl}
+              alt={ojsData.name}
+              width={1200}
+              height={350}
+              className="w-full max-h-[300px] object-cover"
+              unoptimized
+            />
           </div>
         </div>
-      </div>
+      )}
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-4 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-3 space-y-8">
-            {/* Home Section */}
-            <section id="home" className="bg-white rounded-xl shadow-sm p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Welcome to {journal.name}</h2>
-              <p className="text-gray-600 mb-6">{journal.description}</p>
-
-              <h3 className="font-semibold text-gray-900 mb-3">Scope & Focus</h3>
-              <div className="flex flex-wrap gap-2 mb-6">
-                {journal.subjects.map((subject, idx) => (
-                  <span key={idx} className="bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg text-sm">
-                    {subject}
-                  </span>
-                ))}
-              </div>
-
-              <div className="grid md:grid-cols-3 gap-4">
-                <div className="bg-blue-50 rounded-lg p-4 text-center">
-                  <div className="text-3xl font-bold text-[#1e3a5f] mb-1">4-6</div>
-                  <div className="text-sm text-gray-600">Weeks Review Time</div>
-                </div>
-                <div className="bg-blue-50 rounded-lg p-4 text-center">
-                  <div className="text-3xl font-bold text-[#1e3a5f] mb-1">85%</div>
-                  <div className="text-sm text-gray-600">Acceptance Rate</div>
-                </div>
-                <div className="bg-blue-50 rounded-lg p-4 text-center">
-                  <div className="text-3xl font-bold text-[#1e3a5f] mb-1">2-3</div>
-                  <div className="text-sm text-gray-600">Days to First Decision</div>
-                </div>
-              </div>
-            </section>
-
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 py-10">
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Main Content Area */}
+          <div className="lg:col-span-2 space-y-8">
             {/* About Section */}
-            <section id="about" className="bg-white rounded-xl shadow-sm p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">About the Journal</h2>
-              <div className="prose prose-gray max-w-none">
-                <p className="text-gray-600 mb-4">
-                  {journal.name} is a peer-reviewed, open-access journal published by Great Britain Publishers.
-                  The journal aims to advance scientific knowledge and promote best practices in {journal.subjects[0].toLowerCase()}
-                  and related fields through rigorous research and scholarly discourse.
-                </p>
-                <h3 className="text-lg font-semibold text-gray-900 mt-6 mb-3">Aims & Scope</h3>
-                <p className="text-gray-600 mb-4">
-                  We publish original research articles, review articles, case studies, and short communications
-                  that contribute to the advancement of knowledge in our focus areas. The journal welcomes
-                  submissions from researchers, clinicians, and practitioners worldwide.
-                </p>
-                <h3 className="text-lg font-semibold text-gray-900 mt-6 mb-3">Review Process</h3>
-                <p className="text-gray-600">
-                  All submissions undergo a rigorous double-blind peer review process. Our expert reviewers
-                  evaluate manuscripts for scientific merit, originality, methodology, and contribution to the field.
-                </p>
-              </div>
-            </section>
-
-            {/* Editorial Board */}
-            <section id="editorial" className="bg-white rounded-xl shadow-sm p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Editorial Board</h2>
-
-              {/* Editor in Chief */}
-              <div className="mb-8">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <span className="w-2 h-2 bg-[#1e3a5f] rounded-full"></span>
-                  Editor-in-Chief
-                </h3>
-                <div className="grid md:grid-cols-2 gap-4">
-                  {editorialBoard['editor-in-chief'].map((member, idx) => (
-                    <div key={idx} className="bg-blue-50 rounded-lg p-4">
-                      <div className="font-semibold text-gray-900">{member.name}</div>
-                      <div className="text-sm text-gray-600">{member.affiliation}</div>
-                      <div className="text-sm text-gray-500">{member.country}</div>
-                    </div>
-                  ))}
+            <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 hover:shadow-md transition">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-[#1e3a5f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
                 </div>
+                <h2 className="text-xl font-bold text-gray-900">About the Journal</h2>
               </div>
+              <p className="text-gray-600 leading-relaxed">
+                {ojsData?.aboutTheJournal || `The ${cmsJournal.name} is a peer-reviewed academic journal that publishes research and scholarly articles.`}
+              </p>
+              <Link
+                href={`/journals/${slug}/about`}
+                className="inline-flex items-center gap-2 mt-4 text-[#1e3a5f] font-medium hover:gap-3 transition-all"
+              >
+                Learn more
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
 
-              {/* Managing Editor */}
-              <div className="mb-8">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <span className="w-2 h-2 bg-[#1e3a5f] rounded-full"></span>
-                  Managing Editor
-                </h3>
-                <div className="grid md:grid-cols-2 gap-4">
-                  {editorialBoard['managing-editor'].map((member, idx) => (
-                    <div key={idx} className="bg-blue-50 rounded-lg p-4">
-                      <div className="font-semibold text-gray-900">{member.name}</div>
-                      <div className="text-sm text-gray-600">{member.affiliation}</div>
-                      <div className="text-sm text-gray-500">{member.country}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Editors */}
-              <div className="mb-8">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <span className="w-2 h-2 bg-[#1e3a5f] rounded-full"></span>
-                  Editors
-                </h3>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {editorialBoard['editors'].map((member, idx) => (
-                    <div key={idx} className="bg-blue-50 rounded-lg p-4">
-                      <div className="font-semibold text-gray-900">{member.name}</div>
-                      <div className="text-sm text-gray-600">{member.affiliation}</div>
-                      <div className="text-sm text-gray-500">{member.country}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Assistant Editors */}
-              <div className="mb-8">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <span className="w-2 h-2 bg-[#1e3a5f] rounded-full"></span>
-                  Assistant Editors
-                </h3>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {editorialBoard['assistant-editors'].map((member, idx) => (
-                    <div key={idx} className="bg-blue-50 rounded-lg p-4">
-                      <div className="font-semibold text-gray-900">{member.name}</div>
-                      <div className="text-sm text-gray-600">{member.affiliation}</div>
-                      <div className="text-sm text-gray-500">{member.country}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Advisory Board */}
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <span className="w-2 h-2 bg-gray-600 rounded-full"></span>
-                  Advisory Board
-                </h3>
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {advisoryBoard.map((member, idx) => (
-                    <div key={idx} className="bg-gray-50 rounded-lg p-4">
-                      <div className="font-semibold text-gray-900 text-sm">{member.name}</div>
-                      <div className="text-xs text-gray-600">{member.affiliation}</div>
-                      <div className="text-xs text-gray-500">{member.country}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-
-            {/* Current Issue */}
-            <section id="current" className="bg-white rounded-xl shadow-sm p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-bold text-gray-900">Current Issue</h2>
-                {journal.ojsPath && (
-                  <a
-                    href={`https://greatbritainjournals.com/index.php/${journal.ojsPath}/issue/current`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-blue-600 hover:underline flex items-center gap-1"
-                  >
-                    View on OJS
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                  </a>
-                )}
-              </div>
-              <OJSArticles
-                journalId={journal.ojsPath || 'bjahs'}
-                limit={10}
-              />
-            </section>
-
-            {/* Archives */}
-            <section id="archives" className="bg-white rounded-xl shadow-sm p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Archives</h2>
-              <div className="bg-gray-50 rounded-lg p-6 text-center">
-                <p className="text-gray-600">
-                  Archives will be available after the first issue is published.
-                </p>
-              </div>
-            </section>
-
-            {/* Author Information */}
-            <section id="author-info" className="bg-white rounded-xl shadow-sm p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Information for Authors</h2>
-
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Submission Guidelines</h3>
-                  <ul className="space-y-2 text-gray-600">
-                    <li className="flex items-start gap-2">
-                      <svg className="w-5 h-5 text-[#1e3a5f] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            {/* Current Issue - Show preview or real articles */}
+            {(ojsData?.hasPublishedContent && ojsData.recentArticles.length > 0) || hasPreviewContent ? (
+              <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 hover:shadow-md transition">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                      <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                       </svg>
-                      Manuscripts should be submitted in Microsoft Word format (.doc or .docx)
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <svg className="w-5 h-5 text-[#1e3a5f] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      Use 12-point Times New Roman font with 1.5 line spacing
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <svg className="w-5 h-5 text-[#1e3a5f] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      Include abstract (250-300 words) and 4-6 keywords
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <svg className="w-5 h-5 text-[#1e3a5f] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      Follow APA 7th edition citation style
-                    </li>
-                  </ul>
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Article Types</h3>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <h4 className="font-medium text-gray-900 mb-1">Original Research</h4>
-                      <p className="text-sm text-gray-600">4,000-8,000 words</p>
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <h4 className="font-medium text-gray-900 mb-1">Review Articles</h4>
-                      <p className="text-sm text-gray-600">5,000-10,000 words</p>
-                    </div>
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <h4 className="font-medium text-gray-900 mb-1">Case Studies</h4>
-                      <p className="text-sm text-gray-600">2,000-4,000 words</p>
-                    </div>
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <h4 className="font-medium text-gray-900 mb-1">Short Communications</h4>
-                      <p className="text-sm text-gray-600">1,500-2,500 words</p>
+                    <div>
+                      <h2 className="text-xl font-bold text-gray-900">Current Issue</h2>
+                      <p className="text-sm text-gray-500">
+                        Vol. 1, No. 1 (2024)
+                      </p>
                     </div>
                   </div>
+                  <Link
+                    href={`/journals/${slug}/current`}
+                    className="text-[#1e3a5f] text-sm font-medium hover:underline"
+                  >
+                    View All
+                  </Link>
+                </div>
+                <div className="space-y-4">
+                  {(ojsData?.recentArticles || previewArticles).slice(0, 4).map((article, index) => (
+                    <Link
+                      key={article.id || index}
+                      href={`/journals/${slug}/article/${article.id}`}
+                      className="block p-4 rounded-xl bg-gray-50 hover:bg-blue-50 transition group"
+                    >
+                      <h3 className="font-medium text-gray-900 group-hover:text-[#1e3a5f] transition line-clamp-2">
+                        {article.title}
+                      </h3>
+                      {article.authors.length > 0 && (
+                        <p className="text-sm text-gray-500 mt-1">
+                          {article.authors.join(', ')}
+                        </p>
+                      )}
+                    </Link>
+                  ))}
                 </div>
               </div>
-            </section>
-
-            {/* Policies */}
-            <section id="policies" className="bg-white rounded-xl shadow-sm p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Journal Policies</h2>
-
-              <div className="space-y-6">
-                <div className="border-l-4 border-[#1e3a5f] pl-4">
-                  <h3 className="font-semibold text-gray-900 mb-2">Open Access Policy</h3>
-                  <p className="text-gray-600 text-sm">
-                    This journal provides immediate open access to its content, making research freely available to support global knowledge exchange.
-                  </p>
+            ) : (
+              <div className="bg-white rounded-2xl shadow-sm border-l-4 border-[#1e3a5f] p-6 md:p-8">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-[#1e3a5f]/10 rounded-lg flex items-center justify-center">
+                    <svg className="w-5 h-5 text-[#1e3a5f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                    </svg>
+                  </div>
+                  <h2 className="text-xl font-bold text-gray-900">Call for Papers</h2>
                 </div>
+                <p className="text-gray-600 mb-6">
+                  We are now accepting submissions for upcoming issues. Submit your research and contribute to the advancement of knowledge in your field.
+                </p>
+                <Link
+                  href={`/journals/${slug}/submissions`}
+                  className="inline-flex items-center gap-2 bg-[#1e3a5f] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#2d4a6f] transition"
+                >
+                  Submit Your Manuscript
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </Link>
+              </div>
+            )}
 
-                <div className="border-l-4 border-[#1e3a5f] pl-4">
-                  <h3 className="font-semibold text-gray-900 mb-2">Peer Review Policy</h3>
-                  <p className="text-gray-600 text-sm">
-                    All submissions undergo double-blind peer review. Reviewers and authors remain anonymous throughout the review process.
-                  </p>
+            {/* Author Information */}
+            <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 hover:shadow-md transition">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
                 </div>
+                <h2 className="text-xl font-bold text-gray-900">For Authors</h2>
+              </div>
+              <p className="text-gray-600 leading-relaxed mb-4">
+                {ojsData?.informationForAuthors || `We invite submissions of original research that advances knowledge in the field.`}
+              </p>
+              <div className="grid sm:grid-cols-2 gap-4 mt-6">
+                <Link
+                  href={`/journals/${slug}/submissions`}
+                  className="flex items-center gap-3 p-4 rounded-xl bg-gray-50 hover:bg-[#1e3a5f] hover:text-white transition group"
+                >
+                  <svg className="w-5 h-5 text-[#1e3a5f] group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                  </svg>
+                  <span className="font-medium">Submission Guidelines</span>
+                </Link>
+                <a
+                  href={`mailto:${ojsData?.editorEmail}`}
+                  className="flex items-center gap-3 p-4 rounded-xl bg-gray-50 hover:bg-[#1e3a5f] hover:text-white transition group"
+                >
+                  <svg className="w-5 h-5 text-[#1e3a5f] group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <span className="font-medium">Contact Editor</span>
+                </a>
+              </div>
+            </div>
 
-                <div className="border-l-4 border-[#1e3a5f] pl-4">
-                  <h3 className="font-semibold text-gray-900 mb-2">Publication Ethics</h3>
-                  <p className="text-gray-600 text-sm">
-                    We follow COPE guidelines for publication ethics. Plagiarism, data fabrication, and duplicate submission are strictly prohibited.
-                  </p>
+            {/* Archives */}
+            {ojsArchives.length > 0 && (
+              <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 hover:shadow-md transition">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+                      <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                      </svg>
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-900">Archives</h2>
+                  </div>
+                  <Link
+                    href={`/journals/${slug}/archives`}
+                    className="text-[#1e3a5f] text-sm font-medium hover:underline"
+                  >
+                    View All
+                  </Link>
                 </div>
-
-                <div className="border-l-4 border-[#1e3a5f] pl-4">
-                  <h3 className="font-semibold text-gray-900 mb-2">Copyright Policy</h3>
-                  <p className="text-gray-600 text-sm">
-                    Authors retain copyright under Creative Commons Attribution (CC BY) license, allowing others to share and adapt the work with proper attribution.
-                  </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                  {ojsArchives.slice(0, 8).map((issue) => (
+                    <Link
+                      key={issue.id}
+                      href={`/journals/${slug}/issue/${issue.id}`}
+                      className="p-4 rounded-xl bg-gray-50 hover:bg-blue-50 border border-transparent hover:border-[#1e3a5f] transition text-center group"
+                    >
+                      <p className="font-semibold text-[#1e3a5f] group-hover:text-[#c8102e] transition">
+                        Vol. {issue.volume}
+                      </p>
+                      <p className="text-sm text-gray-500">No. {issue.number}</p>
+                      <p className="text-xs text-gray-400 mt-1">{issue.year}</p>
+                    </Link>
+                  ))}
                 </div>
               </div>
-            </section>
+            )}
           </div>
 
           {/* Sidebar */}
           <div className="lg:col-span-1 space-y-6">
-            {/* Submit Box */}
-            <div className="bg-gradient-to-br from-[#1e3a5f] to-[#152d4a] rounded-xl p-6 text-white">
-              <h3 className="font-bold text-lg mb-3">Submit Your Research</h3>
-              <p className="text-blue-100 text-sm mb-4">
-                Ready to publish? Start your submission today.
+            {/* Submit CTA */}
+            <div className="bg-gradient-to-br from-[#1e3a5f] to-[#2d4a6f] rounded-2xl p-6 text-white">
+              <h3 className="font-bold text-lg mb-2">Ready to Publish?</h3>
+              <p className="text-blue-200 text-sm mb-4">
+                Submit your research and join our community of scholars.
               </p>
               <Link
-                href="/submissions"
-                className="block w-full bg-white text-[#1e3a5f] py-2.5 rounded-lg font-semibold text-center hover:bg-blue-50 transition"
+                href={`/journals/${slug}/submissions`}
+                className="block w-full text-center bg-white text-[#1e3a5f] py-3 rounded-lg font-semibold hover:bg-gray-100 transition"
               >
                 Submit Manuscript
               </Link>
             </div>
 
             {/* Journal Info */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h3 className="font-bold text-gray-900 mb-4">Journal Information</h3>
-              <dl className="space-y-3 text-sm">
+            <div className="bg-white rounded-2xl shadow-sm p-6">
+              <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <svg className="w-5 h-5 text-[#1e3a5f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Journal Info
+              </h3>
+              <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <dt className="text-gray-500">ISSN (Online)</dt>
-                  <dd className="text-gray-900 font-medium">{journal.issn}</dd>
+                  <span className="text-gray-500">Publisher</span>
+                  <span className="font-medium text-gray-900">Great Britain Publishers</span>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-gray-500">Frequency</dt>
-                  <dd className="text-gray-900 font-medium">{journal.frequency}</dd>
+                  <span className="text-gray-500">ISSN</span>
+                  <span className="font-medium text-gray-900">{cmsJournal.issn || 'Pending'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-gray-500">Established</dt>
-                  <dd className="text-gray-900 font-medium">{journal.established}</dd>
+                  <span className="text-gray-500">Frequency</span>
+                  <span className="font-medium text-gray-900">Quarterly</span>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-gray-500">Access</dt>
-                  <dd className="text-[#1e3a5f] font-medium">Open Access</dd>
+                  <span className="text-gray-500">Language</span>
+                  <span className="font-medium text-gray-900">English</span>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-gray-500">Review</dt>
-                  <dd className="text-gray-900 font-medium">Double-Blind</dd>
+                  <span className="text-gray-500">Access</span>
+                  <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs font-medium">Open Access</span>
                 </div>
-              </dl>
-            </div>
-
-            {/* APC */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h3 className="font-bold text-gray-900 mb-4">Article Processing Charge (APC)</h3>
-              <div className="text-center py-4">
-                <div className="text-3xl font-bold text-[#1e3a5f]">£200</div>
-                <div className="text-gray-500 text-sm">per accepted article</div>
               </div>
-              <p className="text-gray-600 text-sm mt-4">
-                APC is only charged after acceptance. No submission fees. Discounts available for authors from developing countries.
-              </p>
-              <Link href="/fee-structure" className="text-blue-600 text-sm font-medium hover:underline mt-3 block">
-                View Fee Details →
-              </Link>
             </div>
 
-            {/* Indexing */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h3 className="font-bold text-gray-900 mb-4">Indexing</h3>
-              <p className="text-gray-600 text-sm mb-4">
-                This journal is indexed in:
-              </p>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li className="flex items-center gap-2">
-                  <svg className="w-4 h-4 text-[#1e3a5f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  Google Scholar
-                </li>
-                <li className="flex items-center gap-2">
-                  <svg className="w-4 h-4 text-[#1e3a5f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  Crossref
-                </li>
-                <li className="flex items-center gap-2">
-                  <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  DOAJ (Applied)
-                </li>
-              </ul>
+            {/* Quick Links */}
+            <div className="bg-white rounded-2xl shadow-sm p-6">
+              <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <svg className="w-5 h-5 text-[#1e3a5f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Quick Links
+              </h3>
+              <div className="space-y-2">
+                {[
+                  { label: "About Journal", href: `/journals/${slug}/about`, icon: "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" },
+                  { label: "Editorial Board", href: `/journals/${slug}/editorial-board`, icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" },
+                  { label: "Current Issue", href: `/journals/${slug}/current`, icon: "M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" },
+                  { label: "Archives", href: `/journals/${slug}/archives`, icon: "M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" },
+                ].map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition group"
+                  >
+                    <svg className="w-4 h-4 text-gray-400 group-hover:text-[#1e3a5f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={link.icon} />
+                    </svg>
+                    <span className="text-gray-700 group-hover:text-[#1e3a5f] font-medium">{link.label}</span>
+                  </Link>
+                ))}
+              </div>
             </div>
 
             {/* Contact */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h3 className="font-bold text-gray-900 mb-4">Contact</h3>
-              <div className="space-y-3 text-sm">
+            <div className="bg-white rounded-2xl shadow-sm p-6">
+              <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <svg className="w-5 h-5 text-[#1e3a5f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                Contact Editor
+              </h3>
+              <div className="space-y-3">
                 <a
-                  href={`mailto:${journal.editorInChief.email}`}
-                  className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition"
+                  href={`mailto:${ojsData?.editorEmail}`}
+                  className="flex items-center gap-2 text-sm text-[#1e3a5f] hover:underline"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
-                  {journal.editorInChief.email}
+                  {ojsData?.editorEmail}
                 </a>
-                <Link
-                  href="/contact"
-                  className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition font-medium"
+                <a
+                  href={`mailto:${ojsData?.editorEmail2}`}
+                  className="flex items-center gap-2 text-sm text-[#1e3a5f] hover:underline"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
-                  General Inquiries
-                </Link>
+                  {ojsData?.editorEmail2}
+                </a>
               </div>
             </div>
+
+            {/* Back Link */}
+            <Link
+              href="/journals"
+              className="flex items-center gap-2 text-gray-500 hover:text-[#1e3a5f] transition"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              Back to All Journals
+            </Link>
           </div>
         </div>
       </div>

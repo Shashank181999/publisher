@@ -1,0 +1,114 @@
+{
+  "items": [
+    {
+      "id": "bjahs",
+      "name": "Britain Journal of Allied Health Sciences",
+      "shortName": "BJAHS",
+      "slug": "allied-health-sciences",
+      "issn": "2976-8454",
+      "category": "ahs",
+      "description": "A peer-reviewed academic journal publishing research on Allied Health Professions topics. The journal aims to contribute to the development and advancement of allied health fields and serves as a platform for professionals, researchers, and educators.",
+      "coverImage": "",
+      "editorInChief": {
+        "name": "Editorial Board",
+        "affiliation": "Great Britain Publishers",
+        "email": "editor-bjahs@greatbritainjournals.com"
+      },
+      "frequency": "Quarterly",
+      "established": 2024,
+      "subjects": ["Allied Health Professions", "Rehabilitation", "Healthcare Research", "Clinical Studies"],
+      "ojsPath": "bjahs",
+      "isActive": true,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "bjms",
+      "name": "Britain Journal of Medical Science",
+      "shortName": "BJMS",
+      "slug": "medical-science",
+      "issn": "XXXX-XXXX",
+      "category": "medical",
+      "description": "Publishing cutting-edge research in medical sciences, clinical medicine, and healthcare innovations.",
+      "coverImage": "",
+      "editorInChief": {
+        "name": "Editorial Board",
+        "affiliation": "Great Britain Publishers",
+        "email": "editor-bjms@greatbritainjournals.com"
+      },
+      "frequency": "Quarterly",
+      "established": 2024,
+      "subjects": ["Medical Sciences", "Clinical Medicine", "Healthcare", "Medical Research"],
+      "ojsPath": "bjms",
+      "isActive": true,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "bjrot",
+      "name": "Britain Journal of Radiography & Operation Technology",
+      "shortName": "BJROT",
+      "slug": "radiography-operation-technology",
+      "issn": "XXXX-XXXX",
+      "category": "ahs",
+      "description": "Focusing on radiography, medical imaging, surgical technology, and perioperative care research.",
+      "coverImage": "",
+      "editorInChief": {
+        "name": "Editorial Board",
+        "affiliation": "Great Britain Publishers",
+        "email": "editor-bjrot@greatbritainjournals.com"
+      },
+      "frequency": "Quarterly",
+      "established": 2024,
+      "subjects": ["Radiography", "Medical Imaging", "Surgical Technology", "Perioperative Care"],
+      "ojsPath": "bjrot",
+      "isActive": true,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "bjcstech",
+      "name": "Britain Journal of Computer Science & Technology",
+      "shortName": "BJCSTECH",
+      "slug": "computer-science-technology",
+      "issn": "XXXX-XXXX",
+      "category": "other",
+      "description": "Publishing research in computer science, software engineering, artificial intelligence, and technology innovations.",
+      "coverImage": "",
+      "editorInChief": {
+        "name": "Editorial Board",
+        "affiliation": "Great Britain Publishers",
+        "email": "editor-bjcstech@greatbritainjournals.com"
+      },
+      "frequency": "Quarterly",
+      "established": 2024,
+      "subjects": ["Computer Science", "Software Engineering", "AI & Machine Learning", "Technology"],
+      "ojsPath": "bjcstech",
+      "isActive": true,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "bjss",
+      "name": "Britain Journal of Social Sciences",
+      "shortName": "BJSS",
+      "slug": "social-sciences",
+      "issn": "XXXX-XXXX",
+      "category": "social",
+      "description": "A platform for research in sociology, psychology, political science, and related social science disciplines.",
+      "coverImage": "",
+      "editorInChief": {
+        "name": "Editorial Board",
+        "affiliation": "Great Britain Publishers",
+        "email": "editor-bjss@greatbritainjournals.com"
+      },
+      "frequency": "Quarterly",
+      "established": 2024,
+      "subjects": ["Sociology", "Psychology", "Political Science", "Social Research"],
+      "ojsPath": "bjss",
+      "isActive": true,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ]
+}
