@@ -164,16 +164,19 @@ export default async function JournalPage({ params }: JournalPageProps) {
 
       {/* Banner Image */}
       {ojsData?.homepageImageUrl && (
-        <div className="bg-white border-b">
-          <div className="max-w-7xl mx-auto">
-            <Image
-              src={ojsData.homepageImageUrl}
-              alt={ojsData.name}
-              width={1200}
-              height={350}
-              className="w-full max-h-[300px] object-cover"
-              unoptimized
-            />
+        <div className="bg-gradient-to-b from-slate-100 to-white border-b shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 py-6">
+            <div className="bg-white rounded-xl shadow-md overflow-hidden">
+              <Image
+                src={ojsData.homepageImageUrl}
+                alt={ojsData.name}
+                width={1200}
+                height={400}
+                className="w-full h-auto object-contain"
+                unoptimized
+                priority
+              />
+            </div>
           </div>
         </div>
       )}
