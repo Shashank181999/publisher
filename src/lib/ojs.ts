@@ -1,7 +1,7 @@
 // OJS API Integration
 // Fetches content from OJS and displays on YOUR website
 
-const OJS_BASE_URL = 'https://greatbritainjournals.com';
+const OJS_BASE_URL = process.env.NEXT_PUBLIC_OJS_URL || 'https://greatbritainjournals.com';
 
 export interface OJSArticle {
   id: number;

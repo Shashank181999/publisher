@@ -5,11 +5,24 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 
-// Test credentials for demo
-const TEST_USERS = {
-  "author@test.com": { password: "author123", role: "author", name: "John Author" },
-  "admin@test.com": { password: "admin123", role: "admin", name: "Admin User" },
-};
+// Test credentials loaded from environment variables (REMOVE IN PRODUCTION)
+const TEST_USERS: Record<string, { password: string; role: string; name: string }> = {};
+
+// Only load test users if env vars are set
+if (process.env.NEXT_PUBLIC_TEST_USER_AUTHOR_EMAIL && process.env.NEXT_PUBLIC_TEST_USER_AUTHOR_PASSWORD) {
+  TEST_USERS[process.env.NEXT_PUBLIC_TEST_USER_AUTHOR_EMAIL] = {
+    password: process.env.NEXT_PUBLIC_TEST_USER_AUTHOR_PASSWORD,
+    role: "author",
+    name: "John Author"
+  };
+}
+if (process.env.NEXT_PUBLIC_TEST_USER_ADMIN_EMAIL && process.env.NEXT_PUBLIC_TEST_USER_ADMIN_PASSWORD) {
+  TEST_USERS[process.env.NEXT_PUBLIC_TEST_USER_ADMIN_EMAIL] = {
+    password: process.env.NEXT_PUBLIC_TEST_USER_ADMIN_PASSWORD,
+    role: "admin",
+    name: "Admin User"
+  };
+}
 
 export default function LoginPage() {
   const router = useRouter();
@@ -67,14 +80,20 @@ export default function LoginPage() {
             <p className="text-gray-600 mt-1">Sign in to your account</p>
           </div>
 
-          {/* Test Credentials Info */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-sm">
-            <p className="font-medium text-blue-800 mb-2">Test Credentials:</p>
-            <div className="text-blue-700 space-y-1">
-              <p><strong>Author:</strong> author@test.com / author123</p>
-              <p><strong>Admin:</strong> admin@test.com / admin123</p>
+          {/* Test Credentials Info - Only shown in development when env vars are set */}
+          {Object.keys(TEST_USERS).length > 0 && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-sm">
+              <p className="font-medium text-blue-800 mb-2">Test Credentials:</p>
+              <div className="text-blue-700 space-y-1">
+                {process.env.NEXT_PUBLIC_TEST_USER_AUTHOR_EMAIL && (
+                  <p><strong>Author:</strong> {process.env.NEXT_PUBLIC_TEST_USER_AUTHOR_EMAIL} / {process.env.NEXT_PUBLIC_TEST_USER_AUTHOR_PASSWORD}</p>
+                )}
+                {process.env.NEXT_PUBLIC_TEST_USER_ADMIN_EMAIL && (
+                  <p><strong>Admin:</strong> {process.env.NEXT_PUBLIC_TEST_USER_ADMIN_EMAIL} / {process.env.NEXT_PUBLIC_TEST_USER_ADMIN_PASSWORD}</p>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Error Message */}
           {error && (
